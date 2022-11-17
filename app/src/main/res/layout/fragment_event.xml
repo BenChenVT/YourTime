@@ -15,6 +15,7 @@
             android:id="@+id/editeSwitch"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:minHeight="48dp"
             android:text="EditMode"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
@@ -24,7 +25,7 @@
             app:layout_constraintVertical_bias="0.022" />
 
         <ScrollView
-            android:id="@+id/scrollView2"
+            android:id="@+id/Event_content_scrollview"
             android:layout_width="0dp"
             android:layout_height="0dp"
             android:layout_marginTop="20dp"

@@ -2,7 +2,9 @@
 buildscript {
     repositories {
         // Make sure that you have the following two repositories
-
+        google()
+        mavenCentral()
+        jcenter()
         maven { url 'https://jitpack.io' }
     }
     dependencies {

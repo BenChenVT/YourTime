@@ -21,6 +21,7 @@ private const val ARG_PARAM2 = "param2"
 class TimerFragment : Fragment() {
 
     private lateinit var reportButton: Button
+    private lateinit var eventListButton: Button
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -34,9 +35,14 @@ class TimerFragment : Fragment() {
         // Inflate the layout for this fragment
         val view = inflater.inflate(R.layout.fragment_timer, container, false)
         reportButton = view.findViewById(R.id.ReportButton)
+        eventListButton = view.findViewById(R.id.EventListButton)
 
         reportButton.setOnClickListener {
             view.findNavController().navigate(R.id.action_timerFragment_to_reportFragment)
+        }
+
+        eventListButton.setOnClickListener {
+            view.findNavController().navigate(R.id.action_timerFragment_to_listFragment)
         }
 
         return view

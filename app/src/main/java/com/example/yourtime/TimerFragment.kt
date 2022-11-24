@@ -59,14 +59,7 @@ class TimerFragment : Fragment() {
             minute.findViewById<TextView>(R.id.TimeText).text = liveTime[0].toString().plus(liveTime[1].toString())
         })
 
-//        //这里comment掉了  移到下面去了 看着清楚一点 不用都挤在createdView里面  如果没有问题可以把这段删掉
-//        reportButton.setOnClickListener {
-//            view.findNavController().navigate(R.id.action_timerFragment_to_reportFragment)
-//        }
-//
-//        eventListButton.setOnClickListener {
-//            view.findNavController().navigate(R.id.action_timerFragment_to_listFragment)
-//        }
+
 
         return v
     }

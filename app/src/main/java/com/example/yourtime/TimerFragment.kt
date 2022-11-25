@@ -12,6 +12,7 @@ import android.widget.Toast
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.findNavController
+import com.google.android.material.floatingactionbutton.FloatingActionButton
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -27,8 +28,9 @@ class TimerFragment : Fragment() {
 
     private lateinit var reportButton: Button
     private lateinit var eventListButton: Button
-    private lateinit var startPauseButton: Button
-    private lateinit var finishButton: Button
+    private lateinit var startPauseButton: FloatingActionButton
+    private lateinit var finishButton: FloatingActionButton
+    private lateinit var timeText: TextView
     private lateinit var vm: TimeViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -45,6 +47,7 @@ class TimerFragment : Fragment() {
         eventListButton = view.findViewById(R.id.EventListButton)
         startPauseButton = view.findViewById(R.id.PlayStop_Button)
         finishButton = view.findViewById(R.id.Finish_Button)
+        timeText = view.findViewById(R.id.TimeText)
 
 
 
@@ -54,9 +57,12 @@ class TimerFragment : Fragment() {
 
         //这里liveTime[0]和liveTime[1]是指分钟和秒后期应该加上小时需要在viewModel里面改
         // 两个string应该连上显示在timeText上  这里用plus不知道行不行
-        val minute: TextView = v.findViewById(R.id.TimeText) as TextView
+//        val minute: TextView = v.findViewById(R.id.TimeText) as TextView
         vm.getLiveTime().observe(viewLifecycleOwner, Observer { liveTime ->
-            minute.findViewById<TextView>(R.id.TimeText).text = liveTime[0].toString().plus(liveTime[1].toString())
+            timeText.text = liveTime[0].toString().plus(liveTime[1].toString())
+            System.out.println(liveTime[0].toString())
+            System.out.println(liveTime[1].toString())
+            System.out.println(liveTime[0].toString().plus(liveTime[1].toString()))
         })
 
 
@@ -91,14 +97,12 @@ class TimerFragment : Fragment() {
                 // update button text after the state has been changed
                 if(vm.getState() == TimeViewModel.TimerState.Running){
                     //TODO: 这里要切换按钮上play和stop的图案
-//                    val switchButton: Button = v?.findViewById(R.id.timerButton) as Button
-//                    switchButton.text = "STOP"
+                    startPauseButton.setImageResource(R.drawable.ic_pause)
                 }
                 if(vm.getState() == TimeViewModel.TimerState.Stopped ||
                     vm.getState() == TimeViewModel.TimerState.Paused){
-                      //TODO: 这里要切换按钮上play和stop的图案
-//                    val switchButton: Button = v?.findViewById(R.id.timerButton) as Button
-//                    switchButton.text = "START"
+                    //TODO: 这里要切换按钮上play和stop的图案
+                    startPauseButton.setImageResource(R.drawable.ic_play)
                 }
             }
         })
@@ -107,8 +111,14 @@ class TimerFragment : Fragment() {
         // take down a lap time
         finishButton.setOnClickListener(object : View.OnClickListener {
             override fun onClick(v: View?) {
-                //TODO: 小方块按钮 当这个按下时应该跳出来弹窗 输入event title 和 description
-
+                //TODO: 小方块按钮 当这个按下时应该跳出来弹窗 输入event title 和 description 并且记录地点
+                val success: Boolean = vm.resetTimer()
+                if(!success){
+                    Toast.makeText(requireActivity(), "The timer has already been reset", Toast.LENGTH_SHORT)
+                        .show()
+                }
+                //TODO: 这里要切换按钮上play和stop的图案
+                startPauseButton.setImageResource(R.drawable.ic_play)
             }
         })
 

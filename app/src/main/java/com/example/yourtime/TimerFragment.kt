@@ -1,5 +1,6 @@
 package com.example.yourtime
 
+import android.annotation.SuppressLint
 import android.content.res.Configuration
 import android.os.Bundle
 import androidx.fragment.app.Fragment
@@ -9,6 +10,7 @@ import android.view.ViewGroup
 import android.widget.Button
 import android.widget.TextView
 import android.widget.Toast
+import androidx.databinding.DataBindingUtil.setContentView
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.findNavController
@@ -35,14 +37,16 @@ class TimerFragment : Fragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
     }
 
+    @SuppressLint("SetTextI18n")
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
-        val view = inflater.inflate(R.layout.fragment_timer, container, false)
+        val view: View = inflater.inflate(R.layout.fragment_timer, container, false)
         reportButton = view.findViewById(R.id.ReportButton)
         eventListButton = view.findViewById(R.id.EventListButton)
         startPauseButton = view.findViewById(R.id.PlayStop_Button)
@@ -51,21 +55,25 @@ class TimerFragment : Fragment() {
 
 
 
-        vm = ViewModelProvider(requireActivity()).get(TimeViewModel::class.java)
 
+        vm = ViewModelProvider(requireActivity()).get(TimeViewModel::class.java)
         val v: View = inflater.inflate(R.layout.fragment_timer, container, false)
 
         //这里liveTime[0]和liveTime[1]是指分钟和秒后期应该加上小时需要在viewModel里面改
         // 两个string应该连上显示在timeText上  这里用plus不知道行不行
 //        val minute: TextView = v.findViewById(R.id.TimeText) as TextView
         vm.getLiveTime().observe(viewLifecycleOwner, Observer { liveTime ->
-            timeText.text = liveTime[0].toString().plus(liveTime[1].toString())
-            System.out.println(liveTime[0].toString())
-            System.out.println(liveTime[1].toString())
-            System.out.println(liveTime[0].toString().plus(liveTime[1].toString()))
+            var min = liveTime[0].toString()
+            var sec = liveTime[1].toString()
+            timeText.text = "$min:${
+                if(sec.length == 2)sec
+                else "0" + sec}"
+
+
+            System.out.println("$min:${
+                if(sec.length == 2)sec
+                else "0" + sec}")
         })
-
-
 
         return v
     }
@@ -73,35 +81,33 @@ class TimerFragment : Fragment() {
 
     override fun onViewCreated(view: View, bundle: Bundle?) {
         super.onViewCreated(view, bundle)
-
+        System.out.println("hey this is now working 1111111!!!!!")
         // timerButton is the start and stop button
-        eventListButton.setOnClickListener(object : View.OnClickListener {
+        (view.findViewById(R.id.EventListButton) as Button).setOnClickListener(object : View.OnClickListener {
             override fun onClick(v: View?) {
-                // TODO: go to Event list page
                 v?.findNavController()?.navigate(R.id.action_timerFragment_to_listFragment)
             }
         })
 
 
-        reportButton.setOnClickListener(object : View.OnClickListener {
+        (view.findViewById(R.id.ReportButton) as Button).setOnClickListener(object : View.OnClickListener {
             override fun onClick(v: View?) {
-                // TODO: go to report page
                 v?.findNavController()?.navigate(R.id.action_timerFragment_to_reportFragment)
             }
         })
 
         // go to lap time list fragment
-        startPauseButton.setOnClickListener(object : View.OnClickListener {
+        (view.findViewById(R.id.PlayStop_Button) as FloatingActionButton).setOnClickListener(object : View.OnClickListener {
             override fun onClick(v: View?) {
                 vm.hitTimer()
+                Toast.makeText(requireActivity(), "The timer isn't running", Toast.LENGTH_LONG)
+                    .show()
                 // update button text after the state has been changed
                 if(vm.getState() == TimeViewModel.TimerState.Running){
-                    //TODO: 这里要切换按钮上play和stop的图案
                     startPauseButton.setImageResource(R.drawable.ic_pause)
                 }
                 if(vm.getState() == TimeViewModel.TimerState.Stopped ||
                     vm.getState() == TimeViewModel.TimerState.Paused){
-                    //TODO: 这里要切换按钮上play和stop的图案
                     startPauseButton.setImageResource(R.drawable.ic_play)
                 }
             }
@@ -109,15 +115,14 @@ class TimerFragment : Fragment() {
 
 
         // take down a lap time
-        finishButton.setOnClickListener(object : View.OnClickListener {
+        (view.findViewById(R.id.Finish_Button) as FloatingActionButton).setOnClickListener(object : View.OnClickListener {
             override fun onClick(v: View?) {
-                //TODO: 小方块按钮 当这个按下时应该跳出来弹窗 输入event title 和 description 并且记录地点
+                //还需要：小方块按钮 当这个按下时应该跳出来弹窗 输入event title 和 description 并且记录地点
                 val success: Boolean = vm.resetTimer()
                 if(!success){
-                    Toast.makeText(requireActivity(), "The timer has already been reset", Toast.LENGTH_SHORT)
+                    Toast.makeText(requireActivity(), "test", Toast.LENGTH_SHORT)
                         .show()
                 }
-                //TODO: 这里要切换按钮上play和stop的图案
                 startPauseButton.setImageResource(R.drawable.ic_play)
             }
         })

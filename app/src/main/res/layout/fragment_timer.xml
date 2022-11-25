@@ -89,21 +89,22 @@
             app:layout_constraintHorizontal_bias="0.497"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.451"
+            app:layout_constraintVertical_bias="0.423"
             tools:text="10:00" />
 
         <me.zhanghai.android.materialprogressbar.MaterialProgressBar
             android:id="@+id/circle_progress"
             style="@style/Widget.MaterialProgressBar.ProgressBar"
-            android:minHeight="338dp"
-            android:minWidth="338dp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:minWidth="338dp"
+            android:minHeight="338dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.493"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.417" />
+            app:layout_constraintVertical_bias="0.366" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

@@ -1,12 +1,22 @@
 package com.example.yourtime
 
 import android.util.Log
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import java.util.*
 import kotlin.collections.ArrayList
 
 class TimeViewModel : ViewModel() {
+
+    private val repository: UserRepository = UserRepository().getInstance()
+    private val _allEvents = MutableLiveData<List<Event>>()
+    val allEvents: LiveData<List<Event>> = _allEvents
+
+    init {
+        repository.loadUsers(_allEvents)
+    }
+
     enum class TimerState{
         Stopped, Paused, Running
     }

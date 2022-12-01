@@ -46,32 +46,36 @@ class TimerFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
-        val view: View = inflater.inflate(R.layout.fragment_timer, container, false)
-        reportButton = view.findViewById(R.id.ReportButton)
-        eventListButton = view.findViewById(R.id.EventListButton)
-        startPauseButton = view.findViewById(R.id.PlayStop_Button)
-        finishButton = view.findViewById(R.id.Finish_Button)
-        timeText = view.findViewById(R.id.TimeText)
-
-
-
 
         vm = ViewModelProvider(requireActivity()).get(TimeViewModel::class.java)
         val v: View = inflater.inflate(R.layout.fragment_timer, container, false)
+        reportButton = v.findViewById(R.id.ReportButton)
+        eventListButton = v.findViewById(R.id.EventListButton)
+        startPauseButton = v.findViewById(R.id.PlayStop_Button)
+        finishButton = v.findViewById(R.id.Finish_Button)
+        timeText = v.findViewById(R.id.TimeText)
+
+
 
         //这里liveTime[0]和liveTime[1]是指分钟和秒后期应该加上小时需要在viewModel里面改
 //        val minute: TextView = v.findViewById(R.id.TimeText) as TextView
+        (v.findViewById(R.id.TimeText) as TextView).text = "hello"
         vm.getLiveTime().observe(viewLifecycleOwner, Observer { liveTime ->
-            var min = liveTime[0].toString()
-            var sec = liveTime[1].toString()
-            timeText.text = "$min:${
+            var hour = liveTime[0].toString()
+            var min = liveTime[1].toString()
+            var sec = liveTime[2].toString()
+            (v.findViewById(R.id.TimeText) as TextView).text = "$hour:${
+                if(min.length == 2)min
+                else "0$min"
+            }:${
                 if(sec.length == 2)sec
-                else "0" + sec}"
-
+                else "0$sec"
+            }"
 
             System.out.println("$min:${
                 if(sec.length == 2)sec
-                else "0" + sec}")
+                else "0$sec"
+            }")
         })
 
         return v
@@ -99,8 +103,6 @@ class TimerFragment : Fragment() {
         (view.findViewById(R.id.PlayStop_Button) as FloatingActionButton).setOnClickListener(object : View.OnClickListener {
             override fun onClick(v: View?) {
                 vm.hitTimer()
-                Toast.makeText(requireActivity(), "The timer isn't running", Toast.LENGTH_LONG)
-                    .show()
                 // update button text after the state has been changed
                 if(vm.getState() == TimeViewModel.TimerState.Running){
                     startPauseButton.setImageResource(R.drawable.ic_pause)

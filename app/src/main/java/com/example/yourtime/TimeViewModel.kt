@@ -30,7 +30,7 @@ class TimeViewModel : ViewModel() {
 
     // initialization
     init {
-        liveTime.value = longArrayOf(timerLengthSeconds, timerLengthSeconds)
+        liveTime.value = longArrayOf(timerLengthSeconds, timerLengthSeconds, timerLengthSeconds)
         liveTimeList.value = lapArr
     }
 
@@ -110,26 +110,26 @@ class TimeViewModel : ViewModel() {
     }
 
 
-    /**
-     * function for recording the lap
-     */
-    fun takeLap(): Boolean{
-        val data = getLiveTime().value?.let {it -> TimeData(lapCount, it[0], it[1]) }
-        if(timerState == TimerState.Running){
-            if (data != null) {
-                System.out.println("the data is: " + data.index + "  " + data.min + "  " + data.sec)
-                lapArr.add(data)
-                lapCount++
-                // the live data for the list, will be observed in displayFragment,
-                // once it changed, the recyclerView will update
-                liveTimeList.postValue(lapArr)
-            }
-            return true
-        }
-        else{
-            return false
-        }
-    }
+//    /**
+//     * function for recording the lap
+//     */
+//    fun takeLap(): Boolean{
+//        val data = getLiveTime().value?.let {it -> TimeData(lapCount, it[0], it[1]) }
+//        if(timerState == TimerState.Running){
+//            if (data != null) {
+//                System.out.println("the data is: " + data.index + "  " + data.min + "  " + data.sec)
+//                lapArr.add(data)
+//                lapCount++
+//                // the live data for the list, will be observed in displayFragment,
+//                // once it changed, the recyclerView will update
+//                liveTimeList.postValue(lapArr)
+//            }
+//            return true
+//        }
+//        else{
+//            return false
+//        }
+//    }
 
 //    /**
 //     * function for cancel the lap
@@ -173,7 +173,7 @@ class TimeViewModel : ViewModel() {
      * with array[0] = hour, array[1] = second
      */
     fun getMinSec(): LongArray{
-        return longArrayOf(timerLengthSeconds / 60, timerLengthSeconds % 60)
+        return longArrayOf(timerLengthSeconds / 3600, timerLengthSeconds / 60, timerLengthSeconds % 60)
     }
 
     /**

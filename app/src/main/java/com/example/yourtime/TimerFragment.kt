@@ -60,7 +60,6 @@ class TimerFragment : Fragment() {
         val v: View = inflater.inflate(R.layout.fragment_timer, container, false)
 
         //这里liveTime[0]和liveTime[1]是指分钟和秒后期应该加上小时需要在viewModel里面改
-        // 两个string应该连上显示在timeText上  这里用plus不知道行不行
 //        val minute: TextView = v.findViewById(R.id.TimeText) as TextView
         vm.getLiveTime().observe(viewLifecycleOwner, Observer { liveTime ->
             var min = liveTime[0].toString()

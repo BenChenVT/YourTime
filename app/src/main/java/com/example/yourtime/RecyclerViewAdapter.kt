@@ -41,16 +41,16 @@ class RecyclerViewAdapter (private var clickListener: OnItemClickListener) :
     }
 
     class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
-        private val imageView: ImageView = view.image_view
-        private val address: TextView = view.address
-        private val coordinate: TextView = view.coordinate
-        private val time: TextView = view.time
+//        private val imageView: ImageView = view.image_view
+//        private val address: TextView = view.address
+//        private val coordinate: TextView = view.coordinate
+//        private val time: TextView = view.time
 
         fun bindItems(item: Event, action: OnItemClickListener) {
-            address.text = item.address
-            coordinate.text = item.coordinates
-            time.text = item.date
-            Picasso.get().load(item.imageToken).into(imageView)
+//            address.text = item.address
+//            coordinate.text = item.coordinates
+//            time.text = item.date
+//            Picasso.get().load(item.imageToken).into(imageView)
             itemView.setOnClickListener {
                 action.onItemClick(item, adapterPosition)
             }

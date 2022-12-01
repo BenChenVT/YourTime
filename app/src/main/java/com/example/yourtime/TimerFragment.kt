@@ -8,6 +8,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
+import android.widget.ProgressBar
 import android.widget.TextView
 import android.widget.Toast
 import androidx.databinding.DataBindingUtil.setContentView
@@ -56,6 +57,8 @@ class TimerFragment : Fragment() {
         timeText = v.findViewById(R.id.TimeText)
 
 
+        var progress_count = v.findViewById<me.zhanghai.android.materialprogressbar.MaterialProgressBar>(R.id.progress_count)
+        progress_count.max = 60
 
         //这里liveTime[0]和liveTime[1]是指分钟和秒后期应该加上小时需要在viewModel里面改
 //        val minute: TextView = v.findViewById(R.id.TimeText) as TextView
@@ -72,11 +75,15 @@ class TimerFragment : Fragment() {
                 else "0$sec"
             }"
 
+            progress_count.progress = sec.toInt()
+
+
             System.out.println("$min:${
                 if(sec.length == 2)sec
                 else "0$sec"
             }")
         })
+
 
         return v
     }
@@ -84,7 +91,12 @@ class TimerFragment : Fragment() {
 
     override fun onViewCreated(view: View, bundle: Bundle?) {
         super.onViewCreated(view, bundle)
+
+
         System.out.println("hey this is now working 1111111!!!!!")
+
+
+
         // timerButton is the start and stop button
         (view.findViewById(R.id.EventListButton) as Button).setOnClickListener(object : View.OnClickListener {
             override fun onClick(v: View?) {
@@ -110,6 +122,7 @@ class TimerFragment : Fragment() {
                 if(vm.getState() == TimeViewModel.TimerState.Stopped ||
                     vm.getState() == TimeViewModel.TimerState.Paused){
                     startPauseButton.setImageResource(R.drawable.ic_play)
+
                 }
             }
         })

@@ -30,18 +30,13 @@ class TimeViewModel : ViewModel() {
 
     // need mutable live data class here to store the time
     private val liveTime = MutableLiveData<LongArray>()
-    private val liveTimeList = MutableLiveData<ArrayList<TimeData>>()
     private lateinit var timer: Timer
     private var timerLengthSeconds = 0L
     private var timerState = TimerState.Stopped
-    private var lapArr = arrayListOf<TimeData>()
-    private var lapCount = 0
-
 
     // initialization
     init {
         liveTime.value = longArrayOf(timerLengthSeconds, timerLengthSeconds, timerLengthSeconds)
-        liveTimeList.value = lapArr
     }
 
 
@@ -80,8 +75,6 @@ class TimeViewModel : ViewModel() {
                     liveTime.postValue(getMinSec())
                 }
             },1000, 1000)
-            // 1. update the timer status
-            // 2. update the stop/start button text (in controlFragment)
             timerState = TimerState.Running
             return
         }
@@ -89,18 +82,12 @@ class TimeViewModel : ViewModel() {
         // if the timer is currently running, we will pause it
         if(timerState == TimerState.Running){
             timer.cancel()
-            // 1. update the timer status
-            // 2. update the stop/start button text (in controlFragment)
             timerState = TimerState.Paused
             return
         }
 
 
 
-    }
-
-    fun getArr(): ArrayList<TimeData>{
-        return lapArr
     }
 
     /**
@@ -110,7 +97,6 @@ class TimeViewModel : ViewModel() {
         // if the timer is currently Paused or Running
         if(timerState == TimerState.Paused || timerState == TimerState.Running){
             timer.cancel()
-            clearSavedLap()
             timerLengthSeconds = 0
             liveTime.postValue(getMinSec())
             timerState = TimerState.Stopped
@@ -119,65 +105,13 @@ class TimeViewModel : ViewModel() {
         return false
     }
 
-
-//    /**
-//     * function for recording the lap
-//     */
-//    fun takeLap(): Boolean{
-//        val data = getLiveTime().value?.let {it -> TimeData(lapCount, it[0], it[1]) }
-//        if(timerState == TimerState.Running){
-//            if (data != null) {
-//                System.out.println("the data is: " + data.index + "  " + data.min + "  " + data.sec)
-//                lapArr.add(data)
-//                lapCount++
-//                // the live data for the list, will be observed in displayFragment,
-//                // once it changed, the recyclerView will update
-//                liveTimeList.postValue(lapArr)
-//            }
-//            return true
-//        }
-//        else{
-//            return false
-//        }
-//    }
-
-//    /**
-//     * function for cancel the lap
-//     */
-//    fun cancelLap(){
-//        // not implemented, won't work
-//    }
-
-    /**
-     * clear saved lap time
-     */
-    fun clearSavedLap(): Boolean{
-        // clean the data class
-        if(lapArr.isNotEmpty()){
-            lapArr.clear()
-            lapCount = 0
-
-            liveTimeList.postValue(lapArr)
-            return true
-        }
-        else{
-            return false
-        }
-    }
-
-
     /**
      * get the live time
      */
     fun getLiveTime(): MutableLiveData<LongArray> {
         return liveTime
     }
-    /**
-     * get the live time list
-     */
-    fun getLiveTimeList(): MutableLiveData<ArrayList<TimeData>> {
-        return liveTimeList
-    }
+
     /**
      * return the min and sec
      * with array[0] = hour, array[1] = second

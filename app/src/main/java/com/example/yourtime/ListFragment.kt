@@ -1,11 +1,12 @@
 package com.example.yourtime
 
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 
@@ -14,6 +15,11 @@ class ListFragment : Fragment(), RecyclerViewAdapter.OnItemClickListener {
     private lateinit var viewModel: TimeViewModel
     private lateinit var userRecyclerView: RecyclerView
     private lateinit var adapter: RecyclerViewAdapter
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        requireActivity().title = "Events"
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -39,6 +45,9 @@ class ListFragment : Fragment(), RecyclerViewAdapter.OnItemClickListener {
     }
 
     override fun onItemClick(user: Event, position: Int) {
-        TODO("Not yet implemented")
+        view?.findNavController()
+            ?.navigate(R.id.action_listFragment_to_eventFragment, Bundle().apply {
+                putInt("position", position)
+            })
     }
 }

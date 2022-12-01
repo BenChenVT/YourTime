@@ -8,7 +8,8 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 
-class RecyclerViewAdapter (private var clickListener: OnItemClickListener) :
+
+class RecyclerViewAdapter(private var clickListener: OnItemClickListener) :
     RecyclerView.Adapter<RecyclerViewAdapter.ViewHolder>() {
 
     private val mList = ArrayList<Event>()
@@ -41,16 +42,29 @@ class RecyclerViewAdapter (private var clickListener: OnItemClickListener) :
     }
 
     class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
-//        private val imageView: ImageView = view.image_view
-//        private val address: TextView = view.address
-//        private val coordinate: TextView = view.coordinate
-//        private val time: TextView = view.time
+        private val photo: ImageView = view.findViewById(R.id.photo)
+        private val note: TextView = view.findViewById(R.id.note)
+        private val duration: TextView = view.findViewById(R.id.duration)
 
         fun bindItems(item: Event, action: OnItemClickListener) {
-//            address.text = item.address
-//            coordinate.text = item.coordinates
-//            time.text = item.date
-//            Picasso.get().load(item.imageToken).into(imageView)
+            when (item.title) {
+                "work" -> {
+                    photo.setImageResource(R.drawable.work)
+                }
+                "exercise" -> {
+                    photo.setImageResource(R.drawable.exercise)
+                }
+                "restaurant" -> {
+                    photo.setImageResource(R.drawable.restaurant)
+                }
+                "other" -> {
+                    photo.setImageResource(R.drawable.other)
+                }
+            }
+
+            note.text = item.note
+            duration.text = item.duration
+
             itemView.setOnClickListener {
                 action.onItemClick(item, adapterPosition)
             }

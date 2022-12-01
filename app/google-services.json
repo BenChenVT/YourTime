@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "276005567677",
+    "project_id": "yourtime-99fce",
+    "storage_bucket": "yourtime-99fce.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:276005567677:android:7d9a0d0b4c55e151748bd4",
+        "android_client_info": {
+          "package_name": "com.example.yourtime"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "276005567677-5gmakt12bmpchqmq0plmm3n7e8r32cov.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCB6B_fMCwaousAE_Z-0LMeRAE62TK1kOA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "276005567677-5gmakt12bmpchqmq0plmm3n7e8r32cov.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

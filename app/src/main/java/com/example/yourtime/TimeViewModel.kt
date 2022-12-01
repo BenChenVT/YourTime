@@ -26,8 +26,6 @@ class TimeViewModel : ViewModel() {
     // 2. store/delete time
     // 3. take down lep time, delete lap time
 
-    // mutable list is initially null, need to initialize it
-
     // need mutable live data class here to store the time
     private val liveTime = MutableLiveData<LongArray>()
     private lateinit var timer: Timer
@@ -41,8 +39,6 @@ class TimeViewModel : ViewModel() {
 
 
     // all function about time logic
-
-
     /**
      * function that make the timer ticking
      */
@@ -85,9 +81,6 @@ class TimeViewModel : ViewModel() {
             timerState = TimerState.Paused
             return
         }
-
-
-
     }
 
     /**
@@ -104,14 +97,12 @@ class TimeViewModel : ViewModel() {
         }
         return false
     }
-
     /**
      * get the live time
      */
     fun getLiveTime(): MutableLiveData<LongArray> {
         return liveTime
     }
-
     /**
      * return the min and sec
      * with array[0] = hour, array[1] = second
@@ -119,7 +110,6 @@ class TimeViewModel : ViewModel() {
     fun getMinSec(): LongArray{
         return longArrayOf(timerLengthSeconds / 3600, timerLengthSeconds / 60, timerLengthSeconds % 60)
     }
-
     /**
      * get the status of the timer
      */

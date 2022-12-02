@@ -22,28 +22,28 @@
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintVertical_bias="0.463" />
 
-        <EditText
-            android:id="@+id/dataSelector"
+        <TextView
+            android:id="@+id/input"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:ems="10"
-            android:inputType="date"
+            android:layout_marginTop="44dp"
+            android:text="Please select a date"
             app:layout_constraintBottom_toTopOf="@+id/reportPieChart"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.497"
+            app:layout_constraintHorizontal_bias="0.498"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.49" />
+            app:layout_constraintVertical_bias="0.0" />
 
-        <TextView
-            android:id="@+id/textView4"
+        <Button
+            android:id="@+id/button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Please input a date below: "
-            app:layout_constraintBottom_toTopOf="@+id/dataSelector"
+            android:text="Button"
+            app:layout_constraintBottom_toTopOf="@+id/reportPieChart"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toBottomOf="@+id/input" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 </FrameLayout>

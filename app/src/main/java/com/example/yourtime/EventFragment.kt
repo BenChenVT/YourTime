@@ -6,7 +6,13 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
+import android.widget.ImageButton
+import android.widget.ImageView
+import android.widget.TextView
+import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.firebase.auth.FirebaseAuth
@@ -56,5 +62,27 @@ class EventFragment : Fragment() {
 
         database = Firebase.database.reference
         viewModel = ViewModelProvider(this).get(TimeViewModel::class.java)
+
+        var address = database.child("events").child("0").child("address")
+        val position = arguments?.getInt("position")?:0 // which will be an integer type
+
+        viewModel.getAllEvent().observe(viewLifecycleOwner, Observer { eventList ->
+            when (eventList[position].title) {
+                "work" -> view.findViewById<ImageView>(R.id.imageView).setImageResource(R.drawable.work)
+                "exercise" -> view.findViewById<ImageView>(R.id.imageView).setImageResource(R.drawable.exercise)
+                else -> { // Note the block
+                    print("x is neither 1 nor 2")
+                }
+            }
+            view.findViewById<TextView>(R.id.QuickNoteText).text = eventList[position].note
+            view.findViewById<TextView>(R.id.TimeText).text = "You were at${eventList[position].start}\nYou finish this event with time of${eventList[position].duration}"
+            view.findViewById<TextView>(R.id.LocationText).text = "You did this event at ${eventList[position].address}"
+        })
+
+        (view.findViewById(R.id.imageButtonBack) as ImageButton).setOnClickListener(object : View.OnClickListener {
+            override fun onClick(v: View?) {
+                v?.findNavController()?.navigate(R.id.action_eventFragment_to_listFragment)
+            }
+        })
     }
 }

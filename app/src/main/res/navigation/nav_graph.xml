@@ -35,5 +35,9 @@
         android:id="@+id/eventFragment"
         android:name="com.example.yourtime.EventFragment"
         android:label="fragment_event"
-        tools:layout="@layout/fragment_event" />
+        tools:layout="@layout/fragment_event" >
+        <action
+            android:id="@+id/action_eventFragment_to_listFragment"
+            app:destination="@id/listFragment" />
+    </fragment>
 </navigation>

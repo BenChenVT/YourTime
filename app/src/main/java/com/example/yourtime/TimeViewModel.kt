@@ -116,4 +116,8 @@ class TimeViewModel : ViewModel() {
     fun getState(): TimerState{
         return timerState
     }
+
+    fun getAllEvent(): MutableLiveData<List<Event>>{
+        return _allEvents
+    }
 }

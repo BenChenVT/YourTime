@@ -3,7 +3,6 @@ package com.example.yourtime
 import android.app.DatePickerDialog
 import android.graphics.Color
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -18,7 +17,6 @@ import com.github.mikephil.charting.data.PieDataSet
 import com.github.mikephil.charting.data.PieEntry
 import com.github.mikephil.charting.formatter.PercentFormatter
 import com.github.mikephil.charting.utils.ColorTemplate
-import com.google.firebase.database.FirebaseDatabase
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -34,8 +32,6 @@ class ReportFragment : Fragment() {
     private lateinit var reportPieChart: PieChart
     private lateinit var text: TextView
     private lateinit var button: Button
-
-    var cal = Calendar.getInstance()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -60,10 +56,10 @@ class ReportFragment : Fragment() {
             cal.set(Calendar.MONTH, monthOfYear)
             cal.set(Calendar.DAY_OF_MONTH, dayOfMonth)
 
-            val myFormat = "dd.MM.yyyy" // mention the format you need
+            val myFormat = "dd.MM.yyyy"
             val sdf = SimpleDateFormat(myFormat, Locale.US)
             text.text = sdf.format(cal.time)
-
+            loadPieChart(calculateTime(model.allEvents.value!!, cal))
         }
 
         button.setOnClickListener {
@@ -74,28 +70,38 @@ class ReportFragment : Fragment() {
                     cal.get(Calendar.MONTH),
                     cal.get(Calendar.DAY_OF_MONTH)).show()
             }
-
-            val entriesForOneDay = ArrayList<Event>()
-            
-            loadPieChart(calculateTime(model.allEvents.value!!))
         }
-
         setupPieChart()
-
         return view
     }
 
-    private fun calculateTime(events: List<Event>) : FloatArray {
-        var work: Float = 0.1f
-        var exercise: Float = 0.2f
-        var restanrant: Float = 0.3f
-        var other: Float = 0.4f
+    private fun calculateTime(events: List<Event>, selectedData: Calendar) : FloatArray {
+        var work: Float = 0.0f
+        var exercise: Float = 0.0f
+        var restanrant: Float = 0.0f
+        var other: Float = 0.0f
         var sum: Float = 0f
 
+        val cal = Calendar.getInstance()
+        val sdf = SimpleDateFormat("EEE MMM dd HH:mm:ss z yyyy", Locale.ENGLISH)
+        for (event in events) {
+            cal.time = sdf.parse(event.start)
+            if (cal.get(Calendar.DAY_OF_YEAR) == selectedData.get(Calendar.DAY_OF_YEAR) &&
+                    cal.get(Calendar.YEAR) == selectedData.get(Calendar.YEAR)) {
+                if(event.title == "work") {
+                    work += event.duration?.toFloat()!!
+                } else if (event.title == "exercise") {
+                    exercise += event.duration?.toFloat()!!
+                } else if (event.title == "restaurant") {
+                    restanrant += event.duration?.toFloat()!!
+                } else {
+                    other += event.duration?.toFloat()!!
+                }
+                sum += event.duration?.toFloat()!!
+            }
+        }
 
-
-
-        return floatArrayOf(work, exercise, restanrant, other)
+        return floatArrayOf(work / sum, exercise / sum, restanrant / sum , other / sum)
     }
 
     private fun setupPieChart() {
@@ -116,10 +122,19 @@ class ReportFragment : Fragment() {
 
     fun loadPieChart(arr: FloatArray) {
         val entries = ArrayList<PieEntry>()
-        entries.add(PieEntry(arr[0], "work"))
-        entries.add(PieEntry(arr[1], "exercise"))
-        entries.add(PieEntry(arr[2], "restaurant"))
-        entries.add(PieEntry(arr[3], "other"))
+
+        if (arr[0] != 0.0f) {
+            entries.add(PieEntry(arr[0], "work"))
+        }
+        if (arr[1] != 0.0f) {
+            entries.add(PieEntry(arr[1], "exercise"))
+        }
+        if (arr[2] != 0.0f) {
+            entries.add(PieEntry(arr[2], "restaurant"))
+        }
+        if (arr[3] != 0.0f) {
+            entries.add(PieEntry(arr[3], "other"))
+        }
 
         val colors = ArrayList<Int>()
         for (i in ColorTemplate.MATERIAL_COLORS) {

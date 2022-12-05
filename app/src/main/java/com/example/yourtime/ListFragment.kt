@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageButton
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.findNavController
@@ -26,7 +27,15 @@ class ListFragment : Fragment(), RecyclerViewAdapter.OnItemClickListener {
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_list, container, false)
+        val v = inflater.inflate(R.layout.fragment_list, container, false)
+
+        // Navigate from list fragment to timer fragment
+        val backButton = v.findViewById<ImageButton>(R.id.back_to_timer)
+        backButton.setOnClickListener {
+            it.findNavController().navigate(R.id.action_listFragment_to_timerFragment)
+        }
+
+        return v
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {

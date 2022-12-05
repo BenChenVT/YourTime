@@ -28,6 +28,9 @@
         <action
             android:id="@+id/action_listFragment_to_eventFragment"
             app:destination="@id/eventFragment" />
+        <action
+            android:id="@+id/action_listFragment_to_timerFragment"
+            app:destination="@id/timerFragment" />
     </fragment>
     <fragment
         android:id="@+id/reportFragment"

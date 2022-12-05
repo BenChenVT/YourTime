@@ -119,13 +119,17 @@ class EventFragment : Fragment() {
                 v?.findNavController()?.navigate(R.id.action_eventFragment_to_listFragment)
                 // here we will need to upload an event to firebase.
 
-
-                // starting time
-
                 // if position is -1  add a new data
                 // else update a new data
                 if(position == -1){
-                    // todo: add a new data to the firebase
+
+//                    val data = FirebaseData(long, lat, address, time)
+//                    val data = OneLocationData(address, lat, long, time)
+//                    database.child("locations").child(localID.toString()).child("address").setValue(data.address)
+//                    database.child("locations").child(localID.toString()).child("lat").setValue(data.lat)
+//                    database.child("locations").child(localID.toString()).child("long").setValue(data.long)
+//                    database.child("locations").child(localID.toString()).child("time").setValue(data.time)
+
                 }
                 else{
                     // todo: change a existing event at position in allevent list

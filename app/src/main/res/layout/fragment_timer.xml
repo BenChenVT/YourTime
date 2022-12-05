@@ -50,34 +50,30 @@
             android:textSize="24sp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.498"
-            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/EventListButton"
+            app:layout_constraintStart_toEndOf="@id/ReportButton"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.07" />
+            app:layout_constraintVertical_bias="0.035" />
 
         <Button
             android:id="@+id/ReportButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Report"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.05"
+            app:layout_constraintBottom_toBottomOf="@+id/TimerTitle"
+            app:layout_constraintEnd_toStartOf="@+id/TimerTitle"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.023" />
+            app:layout_constraintTop_toTopOf="@+id/TimerTitle" />
 
         <Button
             android:id="@+id/EventListButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="EventList"
-            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintBottom_toBottomOf="@+id/TimerTitle"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.949"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.023" />
+            app:layout_constraintStart_toEndOf="@+id/TimerTitle"
+            app:layout_constraintTop_toTopOf="@+id/TimerTitle" />
 
         <TextView
             android:id="@+id/TimeText"

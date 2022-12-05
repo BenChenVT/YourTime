@@ -33,7 +33,7 @@ class TimerFragment : Fragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
+        requireActivity().title = "YourTime"
     }
 
     @SuppressLint("SetTextI18n")

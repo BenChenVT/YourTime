@@ -1,11 +1,13 @@
 package com.example.yourtime
 
 import android.annotation.SuppressLint
+import android.graphics.Color
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.cardview.widget.CardView
 import androidx.recyclerview.widget.RecyclerView
 
 
@@ -13,6 +15,8 @@ class RecyclerViewAdapter(private var clickListener: OnItemClickListener) :
     RecyclerView.Adapter<RecyclerViewAdapter.ViewHolder>() {
 
     private val mList = ArrayList<Event>()
+    private val mColors = arrayOf("#F6E58D", "#FFBE76", "#FF7979", "#A29BFE")
+    var card: CardView? = null
 
     override fun onCreateViewHolder(
         parent: ViewGroup,
@@ -21,12 +25,15 @@ class RecyclerViewAdapter(private var clickListener: OnItemClickListener) :
         val itemView =
             LayoutInflater.from(parent.context)
                 .inflate(R.layout.list_card_view, parent, false)
+        card = itemView.findViewById(R.id.card)
         return ViewHolder(itemView)
     }
 
     override fun getItemCount() = mList.size
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
+        // set card view background color
+        card?.setCardBackgroundColor(Color.parseColor(mColors[position % 4]))
         holder.bindItems(mList[position], clickListener)
     }
 

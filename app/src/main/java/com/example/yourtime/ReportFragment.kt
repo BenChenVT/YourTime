@@ -35,6 +35,7 @@ class ReportFragment : Fragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        requireActivity().title = "Report"
     }
 
     override fun onCreateView(

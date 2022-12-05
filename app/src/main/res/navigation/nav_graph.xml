@@ -16,6 +16,9 @@
         <action
             android:id="@+id/action_timerFragment_to_reportFragment"
             app:destination="@id/reportFragment" />
+        <action
+            android:id="@+id/action_timerFragment_to_eventFragment"
+            app:destination="@id/eventFragment" />
     </fragment>
     <fragment
         android:id="@+id/listFragment"
@@ -36,6 +39,9 @@
         android:name="com.example.yourtime.EventFragment"
         android:label="fragment_event"
         tools:layout="@layout/fragment_event" >
+        <action
+            android:id="@+id/action_eventFragment_to_timerFragment"
+            app:destination="@id/timerFragment" />
         <action
             android:id="@+id/action_eventFragment_to_listFragment"
             app:destination="@id/listFragment" />

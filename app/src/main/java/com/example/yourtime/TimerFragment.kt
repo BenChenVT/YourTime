@@ -57,7 +57,7 @@ class TimerFragment : Fragment() {
 
         //这里liveTime[0]和liveTime[1]是指分钟和秒后期应该加上小时需要在viewModel里面改
 //        val minute: TextView = v.findViewById(R.id.TimeText) as TextView
-        (v.findViewById(R.id.TimeText) as TextView).text = "hello"
+//        (v.findViewById(R.id.TimeText) as TextView).text = "hello"
         vm.getLiveTime().observe(viewLifecycleOwner, Observer { liveTime ->
             var hour = liveTime[0].toString()
             var min = liveTime[1].toString()
@@ -78,20 +78,12 @@ class TimerFragment : Fragment() {
                 else "0$sec"
             }")
         })
-
-
         return v
     }
 
 
     override fun onViewCreated(view: View, bundle: Bundle?) {
         super.onViewCreated(view, bundle)
-
-
-        System.out.println("hey this is now working 1111111!!!!!")
-
-
-
         // timerButton is the start and stop button
         (view.findViewById(R.id.EventListButton) as Button).setOnClickListener(object : View.OnClickListener {
             override fun onClick(v: View?) {
@@ -106,6 +98,7 @@ class TimerFragment : Fragment() {
             }
         })
 
+        (view.findViewById(R.id.create_Button) as Button).isEnabled = false
         // go to lap time list fragment
         (view.findViewById(R.id.PlayStop_Button) as FloatingActionButton).setOnClickListener(object : View.OnClickListener {
             override fun onClick(v: View?) {
@@ -117,7 +110,11 @@ class TimerFragment : Fragment() {
                 if(vm.getState() == TimeViewModel.TimerState.Stopped ||
                     vm.getState() == TimeViewModel.TimerState.Paused){
                     startPauseButton.setImageResource(R.drawable.ic_play)
-
+                }
+                when(vm.getState()){
+                    TimeViewModel.TimerState.Stopped -> (view.findViewById(R.id.create_Button) as Button).isEnabled = false
+                    TimeViewModel.TimerState.Running -> (view.findViewById(R.id.create_Button) as Button).isEnabled = true
+                    TimeViewModel.TimerState.Paused-> (view.findViewById(R.id.create_Button) as Button).isEnabled = true
                 }
             }
         })
@@ -126,13 +123,32 @@ class TimerFragment : Fragment() {
         // take down a lap time
         (view.findViewById(R.id.Finish_Button) as FloatingActionButton).setOnClickListener(object : View.OnClickListener {
             override fun onClick(v: View?) {
-                //还需要：小方块按钮 当这个按下时应该跳出来弹窗 输入event title 和 description 并且记录地点
                 val success: Boolean = vm.resetTimer()
                 if(!success){
                     Toast.makeText(requireActivity(), "test", Toast.LENGTH_SHORT)
                         .show()
                 }
                 startPauseButton.setImageResource(R.drawable.ic_play)
+                when(vm.getState()){
+                    TimeViewModel.TimerState.Stopped -> (view.findViewById(R.id.create_Button) as Button).isEnabled = false
+                    TimeViewModel.TimerState.Running -> (view.findViewById(R.id.create_Button) as Button).isEnabled = true
+                    TimeViewModel.TimerState.Paused-> (view.findViewById(R.id.create_Button) as Button).isEnabled = true
+                }
+            }
+        })
+
+
+        (view.findViewById(R.id.create_Button) as Button).setOnClickListener(object : View.OnClickListener {
+            override fun onClick(v: View?) {
+                val success: Boolean = vm.resetTimer()
+                if(!success){
+                    Toast.makeText(requireActivity(), "test", Toast.LENGTH_SHORT)
+                        .show()
+                }
+                startPauseButton.setImageResource(R.drawable.ic_play)
+                view.findNavController().navigate(R.id.action_timerFragment_to_eventFragment, Bundle().apply {
+                    putInt("position", -1)
+                })
             }
         })
 
@@ -144,4 +160,5 @@ class TimerFragment : Fragment() {
 //            }
 //        })
     }
+
 }

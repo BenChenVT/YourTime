@@ -4,6 +4,8 @@ import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
 import java.util.*
 import kotlin.collections.ArrayList
 
@@ -30,7 +32,9 @@ class TimeViewModel : ViewModel() {
     private val liveTime = MutableLiveData<LongArray>()
     private lateinit var timer: Timer
     private var timerLengthSeconds = 0L
+    var latestDuration = 0L
     private var timerState = TimerState.Stopped
+    private lateinit var startTime: String
 
     // initialization
     init {
@@ -61,6 +65,11 @@ class TimeViewModel : ViewModel() {
      * Prof: timer can be put in UI thread
      */
     fun hitTimer(){
+        if(timerState == TimerState.Stopped){
+            val current = LocalDateTime.now()
+            val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")
+            startTime = current.format(formatter)
+        }
         // if the timer is currently not running, then run it
         if(timerState == TimerState.Stopped || timerState == TimerState.Paused){
             timer = Timer() // this was in the --> init{} may not be correct
@@ -90,11 +99,13 @@ class TimeViewModel : ViewModel() {
         // if the timer is currently Paused or Running
         if(timerState == TimerState.Paused || timerState == TimerState.Running){
             timer.cancel()
+            latestDuration = timerLengthSeconds
             timerLengthSeconds = 0
             liveTime.postValue(getMinSec())
             timerState = TimerState.Stopped
             return true
         }
+        startTime = "0"
         return false
     }
     /**
@@ -108,7 +119,7 @@ class TimeViewModel : ViewModel() {
      * with array[0] = hour, array[1] = second
      */
     fun getMinSec(): LongArray{
-        return longArrayOf(timerLengthSeconds / 3600, timerLengthSeconds / 60, timerLengthSeconds % 60)
+        return longArrayOf(timerLengthSeconds / 3600, (timerLengthSeconds - (timerLengthSeconds/3600)*3600) / 60, timerLengthSeconds % 60)
     }
     /**
      * get the status of the timer
@@ -117,7 +128,52 @@ class TimeViewModel : ViewModel() {
         return timerState
     }
 
+    /**
+     * get all the event from the list that sync from firebase
+     */
     fun getAllEvent(): MutableLiveData<List<Event>>{
         return _allEvents
     }
+
+    /**
+     * get current time duration for event fragment, when a new
+     * event just been recorded
+     */
+    fun getDuration():String{
+        var hour = latestDuration / 3600
+        var min = (latestDuration - hour * 3600) / 60
+        var sec = latestDuration % 60
+        return "${
+            if(hour.toInt() == 0) ""
+            else if(hour.toInt() == 1) "1 hour "
+            else "$hour hours "
+        }${
+            if (min.toString() == "0") "${sec} seconds"
+            else if(min.toString().length == 2) "${min}minutes"
+            else if(min.toString() == "1") "${min}minute"
+            else "${min}minutes"
+        }"
+    }
+
+    /**
+     * return a long type that will be stored in firebase
+     * eg. 4min3sec will be stored as 243
+     */
+    fun getRawTime(): Long{
+        return latestDuration
+    }
+
+    /**
+     * get the starting time for an event
+     */
+    fun getStart(): String{
+        return startTime
+    }
+    /**
+     * this function will get current coordinate and address and
+     * later on event fragment will use it
+     */
+
+
+
 }

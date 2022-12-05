@@ -40,6 +40,7 @@ class EventFragment : Fragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        requireActivity().title = "Preview"
     }
 
     override fun onCreateView(

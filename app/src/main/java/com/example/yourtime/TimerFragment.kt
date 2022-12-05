@@ -16,6 +16,8 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.findNavController
 import com.google.android.material.floatingactionbutton.FloatingActionButton
+import com.google.firebase.database.*
+import java.util.ArrayList
 
 /**
  * A simple [Fragment] subclass.

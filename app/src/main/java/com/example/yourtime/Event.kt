@@ -1,6 +1,7 @@
 package com.example.yourtime
 
 data class Event(
+//    var index: String? = "",
     var start: String? = "",
     var duration: String? = "",
     var note: String? = "",

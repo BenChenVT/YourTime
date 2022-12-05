@@ -4,20 +4,17 @@ import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import com.google.firebase.database.*
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 import java.util.*
-import kotlin.collections.ArrayList
+import kotlin.properties.Delegates
 
 class TimeViewModel : ViewModel() {
 
     private val repository: UserRepository = UserRepository().getInstance()
     private val _allEvents = MutableLiveData<List<Event>>()
     val allEvents: LiveData<List<Event>> = _allEvents
-
-    init {
-        repository.loadUsers(_allEvents)
-    }
 
     enum class TimerState{
         Stopped, Paused, Running
@@ -38,6 +35,7 @@ class TimeViewModel : ViewModel() {
 
     // initialization
     init {
+        repository.loadUsers(_allEvents)
         liveTime.value = longArrayOf(timerLengthSeconds, timerLengthSeconds, timerLengthSeconds)
     }
 
@@ -79,7 +77,7 @@ class TimeViewModel : ViewModel() {
                     timerLengthSeconds += 1
                     liveTime.postValue(getMinSec())
                 }
-            },1000, 1000)
+            },10, 10)
             timerState = TimerState.Running
             return
         }
@@ -149,9 +147,9 @@ class TimeViewModel : ViewModel() {
             else "$hour hours "
         }${
             if (min.toString() == "0") "${sec} seconds"
-            else if(min.toString().length == 2) "${min}minutes"
-            else if(min.toString() == "1") "${min}minute"
-            else "${min}minutes"
+            else if(min.toString().length == 2) "${min} minutes"
+            else if(min.toString() == "1") "${min} minute"
+            else "${min} minutes"
         }"
     }
 
@@ -185,6 +183,11 @@ class TimeViewModel : ViewModel() {
     fun getAddress(){
 
     }
+
+    fun deleteItem(fbIndex : Int){
+        repository.deleteEvent(fbIndex, _allEvents)
+    }
+
 
 
 }

@@ -90,7 +90,8 @@ class EventFragment : Fragment() {
             duration = viewModel.getRawTime().toString()
             start = viewModel.getStart()
             // todo: get address and location in viewModel
-            view.findViewById<TextView>(R.id.TimeText).text = "On ${viewModel.getStart()}\nYou were at [location placeholder]\nYou finish this event with time of ${viewModel.getDuration()}"
+            view.findViewById<TextView>(R.id.TimeText).text = "On ${viewModel.getStart()}\n" +
+                    "You were at [location placeholder]\nYou finish this event with time of ${viewModel.getDuration()}"
         }
         else{
             viewModel.getAllEvent().observe(viewLifecycleOwner, Observer { eventList ->
@@ -103,9 +104,27 @@ class EventFragment : Fragment() {
                     "work" -> spinner.setSelection(4)
                     "other" -> spinner.setSelection(0)
                 }
+                var latestDuration = eventList[position].duration?.toIntOrNull()
+                var hour = latestDuration?.div(3600)
+                var hours = hour?.times(3600)
+                var min = hours?.let { latestDuration?.minus(it) }?.div(60)
+                var sec = latestDuration?.rem(60)
+                if (hour != null) {
+                    duration =
+                    "${
+                        if(hour.toInt() == 0) ""
+                        else if(hour.toInt() == 1) "1 hour "
+                        else "$hour hours "
+                    }${
+                        if (min.toString() == "0") "${sec} seconds"
+                        else if(min.toString().length == 2) "${min} minutes"
+                        else if(min.toString() == "1") "${min} minute"
+                        else "${min} minutes"
+                    }"
+                }
                 view.findViewById<TextView>(R.id.QuickNoteText).text = eventList[position].note
                 view.findViewById<TextView>(R.id.TimeText).text = "On ${eventList[position].start}\nYou were at${eventList[position].start}\n" +
-                        "You finish this event with time of${eventList[position].duration}" // this is wrong because duration is raw string
+                        "You finish this event with time of ${duration}" // this is wrong because duration is raw string
                 view.findViewById<TextView>(R.id.LocationText).text = "You did this event at ${eventList[position].address}"
 
 
@@ -124,6 +143,8 @@ class EventFragment : Fragment() {
                 // else update a new data
                 if(position == -1){
                     var index = viewModel.getSize()
+//                    var index = local?.let { viewModel.allEvents.value?.get(it)?.index?.toInt() ?: plus } + 1
+                    database.child("events").child(index.toString()).child("index").setValue(index)
                     database.child("events").child(index.toString()).child("address").setValue(address)
                     database.child("events").child(index.toString()).child("coordinates").setValue(coordinates)
                     database.child("events").child(index.toString()).child("duration").setValue(duration)
@@ -152,6 +173,7 @@ class EventFragment : Fragment() {
 
         (view.findViewById(R.id.imageButtonTimer) as ImageButton).setOnClickListener(object : View.OnClickListener {
             override fun onClick(v: View?) {
+//                viewModel.deleteItem(1)
                 v?.findNavController()?.navigate(R.id.action_eventFragment_to_timerFragment)
             }
         })

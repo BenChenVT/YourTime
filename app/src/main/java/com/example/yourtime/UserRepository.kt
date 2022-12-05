@@ -18,10 +18,30 @@ class UserRepository {
         }
     }
 
-    fun loadUsers(userList: MutableLiveData<List<Event>>) {
+    fun loadUsers(userList: MutableLiveData<List<Event>>){
         databaseReference.addValueEventListener(object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
                 try {
+                    val _userList: List<Event> = snapshot.children.map { dataSnapshot ->
+                        dataSnapshot.getValue(Event::class.java)!!
+                    }
+                    userList.postValue(_userList)
+                } catch (_: Exception) {
+                }
+            }
+
+            override fun onCancelled(error: DatabaseError) {
+                TODO("Not yet implemented")
+            }
+        })
+    }
+
+
+    fun deleteEvent(fbIndex: Int, userList: MutableLiveData<List<Event>>){
+        databaseReference.addValueEventListener(object : ValueEventListener {
+            override fun onDataChange(snapshot: DataSnapshot) {
+                try {
+                    snapshot.ref.child(fbIndex.toString()).removeValue()
                     val _userList: List<Event> = snapshot.children.map { dataSnapshot ->
                         dataSnapshot.getValue(Event::class.java)!!
                     }

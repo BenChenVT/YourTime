@@ -47,7 +47,7 @@ class ListFragment : Fragment(), RecyclerViewAdapter.OnItemClickListener {
         adapter = RecyclerViewAdapter(this)
         userRecyclerView.adapter = adapter
 
-        viewModel = ViewModelProvider(this).get(TimeViewModel::class.java)
+        viewModel = ViewModelProvider(requireActivity()).get(TimeViewModel::class.java)
         viewModel.allEvents.observe(viewLifecycleOwner) {
             adapter.updateUserList(it)
         }

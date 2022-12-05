@@ -79,7 +79,7 @@ class TimeViewModel : ViewModel() {
                     timerLengthSeconds += 1
                     liveTime.postValue(getMinSec())
                 }
-            },1000, 1000)
+            },10, 10)
             timerState = TimerState.Running
             return
         }

@@ -169,11 +169,22 @@ class TimeViewModel : ViewModel() {
     fun getStart(): String{
         return startTime
     }
+
+    /**
+     * get the size of current eventlist
+     */
+    fun getSize(): Int? {
+        return allEvents.value?.size
+    }
+
+
     /**
      * this function will get current coordinate and address and
      * later on event fragment will use it
      */
+    fun getAddress(){
 
+    }
 
 
 }

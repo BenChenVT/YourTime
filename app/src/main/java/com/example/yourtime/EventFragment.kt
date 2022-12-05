@@ -28,10 +28,10 @@ class EventFragment : Fragment() {
     private lateinit var database: DatabaseReference
 
     private var note = "-1"
-    private lateinit var coordinates:String
+    private var coordinates = "not done yet"
     private var duration = "-1"
-    private lateinit var address: String
-    private lateinit var photo: String
+    private var address = "not done yet"
+    private var photo = "not done yet"
     private var start = "-1"
     private var title = "-1"
 
@@ -123,14 +123,14 @@ class EventFragment : Fragment() {
                 // if position is -1  add a new data
                 // else update a new data
                 if(position == -1){
-
-//                    val data = FirebaseData(long, lat, address, time)
-//                    val data = OneLocationData(address, lat, long, time)
-//                    database.child("locations").child(localID.toString()).child("address").setValue(data.address)
-//                    database.child("locations").child(localID.toString()).child("lat").setValue(data.lat)
-//                    database.child("locations").child(localID.toString()).child("long").setValue(data.long)
-//                    database.child("locations").child(localID.toString()).child("time").setValue(data.time)
-
+                    var index = viewModel.getSize()
+                    database.child("events").child(index.toString()).child("address").setValue(address)
+                    database.child("events").child(index.toString()).child("coordinates").setValue(coordinates)
+                    database.child("events").child(index.toString()).child("duration").setValue(duration)
+                    database.child("events").child(index.toString()).child("note").setValue(note)
+                    database.child("events").child(index.toString()).child("photo").setValue(photo)
+                    database.child("events").child(index.toString()).child("start").setValue(start)
+                    database.child("events").child(index.toString()).child("title").setValue(title)
                 }
                 else{
                     // todo: change a existing event at position in allevent list

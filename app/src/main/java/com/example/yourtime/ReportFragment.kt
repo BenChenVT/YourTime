@@ -89,7 +89,7 @@ class ReportFragment : Fragment() {
         for (event in events) {
             cal.time = sdf.parse(event.start)
             if (cal.get(Calendar.DAY_OF_YEAR) == selectedData.get(Calendar.DAY_OF_YEAR) &&
-                    cal.get(Calendar.YEAR) == selectedData.get(Calendar.YEAR)) {
+                cal.get(Calendar.YEAR) == selectedData.get(Calendar.YEAR)) {
                 if(event.title == "work") {
                     work += event.duration?.toFloat()!!
                 } else if (event.title == "exercise") {

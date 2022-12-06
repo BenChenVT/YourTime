@@ -1,6 +1,7 @@
 package com.example.yourtime
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -34,7 +35,6 @@ class ListFragment : Fragment(), RecyclerViewAdapter.OnItemClickListener {
         backButton.setOnClickListener {
             it.findNavController().navigate(R.id.action_listFragment_to_timerFragment)
         }
-
         return v
     }
 

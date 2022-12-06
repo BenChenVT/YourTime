@@ -56,6 +56,13 @@ dependencies {
     implementation 'androidx.recyclerview:recyclerview:1.0.0'
     implementation 'androidx.databinding:databinding-runtime:4.2.2'
 
+    //location via Play Services
+    implementation 'com.google.android.gms:play-services-location:21.0.1'
+
+    //coroutine
+    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:1.6.4"
+    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:1.6.4"
+
 
     // timer looper dependency
     implementation 'me.zhanghai.android.materialprogressbar:library:1.6.1'

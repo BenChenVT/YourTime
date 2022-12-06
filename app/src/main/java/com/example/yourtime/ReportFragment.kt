@@ -3,6 +3,7 @@ package com.example.yourtime
 import android.app.DatePickerDialog
 import android.graphics.Color
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -44,22 +45,21 @@ class ReportFragment : Fragment() {
     ): View? {
         // Inflate the layout for this fragment
         val view = inflater.inflate(R.layout.fragment_report, container, false)
+        val model = TimeViewModel()
+        var cal = Calendar.getInstance()
+        val myFormat = "dd.MM.yyyy"
+        val sdf = SimpleDateFormat(myFormat, Locale.US)
         reportPieChart = view.findViewById(R.id.reportPieChart)
         button = view.findViewById(R.id.button)
         text = view.findViewById(R.id.input)
-
-        var cal = Calendar.getInstance()
-
-        val model = TimeViewModel()
+        setupPieChart()
 
         val dateSetListener = DatePickerDialog.OnDateSetListener { view, year, monthOfYear, dayOfMonth ->
             cal.set(Calendar.YEAR, year)
             cal.set(Calendar.MONTH, monthOfYear)
             cal.set(Calendar.DAY_OF_MONTH, dayOfMonth)
 
-            val myFormat = "dd.MM.yyyy"
-            val sdf = SimpleDateFormat(myFormat, Locale.US)
-            text.text = sdf.format(cal.time)
+            reportPieChart.setCenterText(sdf.format(cal.time))
             loadPieChart(calculateTime(model.allEvents.value!!, cal))
         }
 
@@ -72,7 +72,7 @@ class ReportFragment : Fragment() {
                     cal.get(Calendar.DAY_OF_MONTH)).show()
             }
         }
-        setupPieChart()
+
         return view
     }
 
@@ -81,10 +81,11 @@ class ReportFragment : Fragment() {
         var exercise: Float = 0.0f
         var restanrant: Float = 0.0f
         var other: Float = 0.0f
-        var sum: Float = 0f
+        var sum: Float = 0.0f
 
         val cal = Calendar.getInstance()
         val sdf = SimpleDateFormat("yyyy-MM-dd H:m:s", Locale.ENGLISH)
+
         for (event in events) {
             cal.time = sdf.parse(event.start)
             if (cal.get(Calendar.DAY_OF_YEAR) == selectedData.get(Calendar.DAY_OF_YEAR) &&
@@ -101,6 +102,11 @@ class ReportFragment : Fragment() {
                 sum += event.duration?.toFloat()!!
             }
         }
+        if (sum == 0.0f) {
+            val myFormat = "dd.MM.yyyy"
+            val sdf = SimpleDateFormat(myFormat, Locale.US)
+            reportPieChart.setCenterText(sdf.format(cal.time) + " No Data")
+        }
 
         return floatArrayOf(work / sum, exercise / sum, restanrant / sum , other / sum)
     }
@@ -110,15 +116,9 @@ class ReportFragment : Fragment() {
         reportPieChart.setUsePercentValues(true)
         reportPieChart.setEntryLabelTextSize(12F)
         reportPieChart.setEntryLabelColor(Color.BLACK)
-        reportPieChart.setCenterText("Your Time")
         reportPieChart.setCenterTextSize(24F)
         reportPieChart.getDescription().setEnabled(false)
-        val l: Legend = reportPieChart.getLegend()
-        l.verticalAlignment = Legend.LegendVerticalAlignment.TOP
-        l.horizontalAlignment = Legend.LegendHorizontalAlignment.RIGHT
-        l.orientation = Legend.LegendOrientation.VERTICAL
-        l.setDrawInside(false)
-        l.isEnabled = true
+
     }
 
     fun loadPieChart(arr: FloatArray) {

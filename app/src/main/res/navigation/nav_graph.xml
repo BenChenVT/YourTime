@@ -9,7 +9,7 @@
         android:id="@+id/timerFragment"
         android:name="com.example.yourtime.TimerFragment"
         android:label="fragment_timer"
-        tools:layout="@layout/fragment_timer" >
+        tools:layout="@layout/fragment_timer">
         <action
             android:id="@+id/action_timerFragment_to_listFragment"
             app:destination="@id/listFragment" />
@@ -24,7 +24,7 @@
         android:id="@+id/listFragment"
         android:name="com.example.yourtime.ListFragment"
         android:label="fragment_list"
-        tools:layout="@layout/fragment_list" >
+        tools:layout="@layout/fragment_list">
         <action
             android:id="@+id/action_listFragment_to_eventFragment"
             app:destination="@id/eventFragment" />
@@ -41,7 +41,7 @@
         android:id="@+id/eventFragment"
         android:name="com.example.yourtime.EventFragment"
         android:label="fragment_event"
-        tools:layout="@layout/fragment_event" >
+        tools:layout="@layout/fragment_event">
         <action
             android:id="@+id/action_eventFragment_to_timerFragment"
             app:destination="@id/timerFragment" />
@@ -56,7 +56,7 @@
         android:id="@+id/imageFragment"
         android:name="com.example.yourtime.ImageFragment"
         android:label="fragment_image"
-        tools:layout="@layout/fragment_image" >
+        tools:layout="@layout/fragment_image">
         <action
             android:id="@+id/action_imageFragment_to_eventFragment"
             app:destination="@id/eventFragment" />

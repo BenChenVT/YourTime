@@ -22,7 +22,7 @@ class TimeViewModel : ViewModel() {
 
     var position = 0
 
-    enum class TimerState{
+    enum class TimerState {
         Stopped, Paused, Running
     }
     // do everyting to keep tarck of the time

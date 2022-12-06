@@ -3,7 +3,6 @@ package com.example.yourtime
 import android.app.DatePickerDialog
 import android.graphics.Color
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -12,7 +11,6 @@ import android.widget.TextView
 import androidx.fragment.app.Fragment
 import com.github.mikephil.charting.animation.Easing
 import com.github.mikephil.charting.charts.PieChart
-import com.github.mikephil.charting.components.Legend
 import com.github.mikephil.charting.data.PieData
 import com.github.mikephil.charting.data.PieDataSet
 import com.github.mikephil.charting.data.PieEntry
@@ -54,14 +52,15 @@ class ReportFragment : Fragment() {
         text = view.findViewById(R.id.input)
         setupPieChart()
 
-        val dateSetListener = DatePickerDialog.OnDateSetListener { view, year, monthOfYear, dayOfMonth ->
-            cal.set(Calendar.YEAR, year)
-            cal.set(Calendar.MONTH, monthOfYear)
-            cal.set(Calendar.DAY_OF_MONTH, dayOfMonth)
+        val dateSetListener =
+            DatePickerDialog.OnDateSetListener { view, year, monthOfYear, dayOfMonth ->
+                cal.set(Calendar.YEAR, year)
+                cal.set(Calendar.MONTH, monthOfYear)
+                cal.set(Calendar.DAY_OF_MONTH, dayOfMonth)
 
-            reportPieChart.setCenterText(sdf.format(cal.time))
-            loadPieChart(calculateTime(model.allEvents.value!!, cal))
-        }
+                reportPieChart.centerText = sdf.format(cal.time)
+                loadPieChart(calculateTime(model.allEvents.value!!, cal))
+            }
 
         button.setOnClickListener {
             context?.let { it1 ->
@@ -69,14 +68,15 @@ class ReportFragment : Fragment() {
                     it1, dateSetListener,
                     cal.get(Calendar.YEAR),
                     cal.get(Calendar.MONTH),
-                    cal.get(Calendar.DAY_OF_MONTH)).show()
+                    cal.get(Calendar.DAY_OF_MONTH)
+                ).show()
             }
         }
 
         return view
     }
 
-    private fun calculateTime(events: List<Event>, selectedData: Calendar) : FloatArray {
+    private fun calculateTime(events: List<Event>, selectedData: Calendar): FloatArray {
         var work: Float = 0.0f
         var exercise: Float = 0.0f
         var restanrant: Float = 0.0f
@@ -89,8 +89,9 @@ class ReportFragment : Fragment() {
         for (event in events) {
             cal.time = sdf.parse(event.start)
             if (cal.get(Calendar.DAY_OF_YEAR) == selectedData.get(Calendar.DAY_OF_YEAR) &&
-                cal.get(Calendar.YEAR) == selectedData.get(Calendar.YEAR)) {
-                if(event.title == "work") {
+                cal.get(Calendar.YEAR) == selectedData.get(Calendar.YEAR)
+            ) {
+                if (event.title == "work") {
                     work += event.duration?.toFloat()!!
                 } else if (event.title == "exercise") {
                     exercise += event.duration?.toFloat()!!
@@ -105,19 +106,19 @@ class ReportFragment : Fragment() {
         if (sum == 0.0f) {
             val myFormat = "dd.MM.yyyy"
             val sdf = SimpleDateFormat(myFormat, Locale.US)
-            reportPieChart.setCenterText(sdf.format(cal.time) + " No Data")
+            reportPieChart.centerText = sdf.format(cal.time) + " No Data"
         }
 
-        return floatArrayOf(work / sum, exercise / sum, restanrant / sum , other / sum)
+        return floatArrayOf(work / sum, exercise / sum, restanrant / sum, other / sum)
     }
 
     private fun setupPieChart() {
-        reportPieChart.setDrawHoleEnabled(true)
+        reportPieChart.isDrawHoleEnabled = true
         reportPieChart.setUsePercentValues(true)
         reportPieChart.setEntryLabelTextSize(12F)
         reportPieChart.setEntryLabelColor(Color.BLACK)
         reportPieChart.setCenterTextSize(24F)
-        reportPieChart.getDescription().setEnabled(false)
+        reportPieChart.description.isEnabled = false
 
     }
 
@@ -142,7 +143,7 @@ class ReportFragment : Fragment() {
             colors.add(i)
         }
         val dataSet = PieDataSet(entries, "time")
-        dataSet.setColors(colors)
+        dataSet.colors = colors
 
         val data = PieData(dataSet)
         data.setDrawValues(true)
@@ -150,9 +151,9 @@ class ReportFragment : Fragment() {
         data.setValueTextSize(12f)
         data.setValueTextColor(Color.BLACK)
 
-        reportPieChart.setData(data);
-        reportPieChart.invalidate();
+        reportPieChart.data = data
+        reportPieChart.invalidate()
 
-        reportPieChart.animateY(1400, Easing.EaseInOutQuad);
+        reportPieChart.animateY(1400, Easing.EaseInOutQuad)
     }
 }

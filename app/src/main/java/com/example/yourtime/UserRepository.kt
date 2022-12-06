@@ -18,7 +18,7 @@ class UserRepository {
         }
     }
 
-    fun loadUsers(userList: MutableLiveData<List<Event>>){
+    fun loadUsers(userList: MutableLiveData<List<Event>>) {
         databaseReference.addValueEventListener(object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
                 try {
@@ -37,7 +37,7 @@ class UserRepository {
     }
 
 
-    fun deleteEvent(fbIndex: Int, userList: MutableLiveData<List<Event>>){
+    fun deleteEvent(fbIndex: Int, userList: MutableLiveData<List<Event>>) {
         databaseReference.addValueEventListener(object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
                 try {

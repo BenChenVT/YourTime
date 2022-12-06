@@ -16,11 +16,10 @@
             android:id="@+id/imageButtonBack"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginStart="15dp"
             android:minHeight="48dp"
             android:src="@drawable/ic_baseline_toc_24"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.044"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintVertical_bias="0.039"
@@ -33,7 +32,7 @@
             android:layout_marginStart="15dp"
             android:layout_marginEnd="15dp"
             app:cardBackgroundColor="#80D8FF"
-            app:cardCornerRadius="20dp"
+            app:cardCornerRadius="30dp"
             app:layout_constraintBottom_toTopOf="@id/deleteButton"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.5"
@@ -50,8 +49,8 @@
 
                 <ImageView
                     android:id="@+id/takePicture"
-                    android:layout_width="180dp"
-                    android:layout_height="match_parent"
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
                     android:src="@drawable/ic_baseline_add_a_photo_24"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toStartOf="@id/LocationText"
@@ -78,16 +77,6 @@
 
         </androidx.cardview.widget.CardView>
 
-        <ImageView
-            android:id="@+id/imageView"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            app:layout_constraintBottom_toTopOf="@id/spinnerTitle"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:srcCompat="@drawable/common_google_signin_btn_icon_dark" />
-
         <Button
             android:id="@+id/deleteButton"
             android:layout_width="wrap_content"
@@ -106,7 +95,7 @@
             android:layout_marginStart="15dp"
             android:layout_marginEnd="15dp"
             app:cardBackgroundColor="#B9F6CA"
-            app:cardCornerRadius="20dp"
+            app:cardCornerRadius="30dp"
             app:layout_constraintBottom_toTopOf="@+id/Card2"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.5"
@@ -119,7 +108,7 @@
                 android:id="@+id/relativeLayout2"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_margin="15dp">
+                android:layout_margin="20dp">
 
                 <TextView
                     android:id="@+id/textView_detail"
@@ -129,7 +118,7 @@
                     android:text="Event Detail"
                     android:textAlignment="center"
                     android:textColor="#000000"
-                    android:textSize="28sp"
+                    android:textSize="24sp"
                     app:layout_constraintBottom_toTopOf="@id/TimeText"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
@@ -160,28 +149,27 @@
             android:layout_marginStart="15dp"
             android:layout_marginEnd="15dp"
             app:cardBackgroundColor="#F6E58D"
-            app:cardCornerRadius="20dp"
+            app:cardCornerRadius="30dp"
             app:layout_constraintBottom_toTopOf="@id/Card1"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/spinnerTitle">
+            app:layout_constraintTop_toBottomOf="@id/cardView">
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/relativeLayout"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_margin="15dp">
+                android:layout_margin="20dp">
 
                 <TextView
                     android:id="@+id/textView_text"
-                    android:layout_width="150dp"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:fontFamily="@font/rubik"
                     android:text="Quick Note"
                     android:textAlignment="center"
                     android:textColor="#000000"
-                    android:textSize="28sp"
+                    android:textSize="24sp"
                     app:layout_constraintBottom_toTopOf="@id/editTextQucikNote"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
@@ -235,26 +223,59 @@
             android:id="@+id/imageButtonTimer"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginEnd="15dp"
             android:minHeight="48dp"
             android:src="@drawable/ic_baseline_timer_24"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.944"
-            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintVertical_bias="0.039"
             tools:ignore="SpeakableTextPresentCheck" />
 
-        <Spinner
-            android:id="@+id/spinnerTitle"
-            android:layout_width="160dp"
+        <androidx.cardview.widget.CardView
+            android:id="@+id/cardView"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:minHeight="48dp"
-            app:layout_constraintBottom_toTopOf="@id/card0"
-            app:layout_constraintEnd_toEndOf="@+id/imageView"
-            app:layout_constraintStart_toStartOf="@+id/imageView"
-            app:layout_constraintTop_toBottomOf="@+id/imageView"
-            tools:ignore="SpeakableTextPresentCheck" />
+            android:layout_marginStart="15dp"
+            android:layout_marginEnd="15dp"
+            app:cardBackgroundColor="#f5f5f5"
+            app:cardCornerRadius="30dp"
+            app:layout_constraintBottom_toTopOf="@+id/card0"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="1.0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/imageButtonBack">
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="15dp"
+                android:layout_marginTop="15dp">
+
+                <Spinner
+                    android:id="@+id/spinnerTitle"
+                    android:layout_width="160dp"
+                    android:layout_height="wrap_content"
+                    android:minHeight="48dp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="@+id/imageView"
+                    app:layout_constraintStart_toStartOf="@+id/imageView"
+                    app:layout_constraintTop_toBottomOf="@id/imageView"
+                    tools:ignore="SpeakableTextPresentCheck" />
+
+                <ImageView
+                    android:id="@+id/imageView"
+                    android:layout_width="64dp"
+                    android:layout_height="64dp"
+                    app:layout_constraintBottom_toTopOf="@+id/spinnerTitle"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:srcCompat="@drawable/common_google_signin_btn_icon_dark" />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+        </androidx.cardview.widget.CardView>
 
 
     </androidx.constraintlayout.widget.ConstraintLayout>

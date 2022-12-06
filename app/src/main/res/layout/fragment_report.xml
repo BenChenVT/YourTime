@@ -11,41 +11,48 @@
         android:layout_height="match_parent">
 
 
-        <com.github.mikephil.charting.charts.PieChart
-            android:id="@+id/reportPieChart"
-            android:layout_width="315dp"
-            android:layout_height="304dp"
-            android:text="TextView"
+        <androidx.cardview.widget.CardView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:backgroundTint="#F5F5F5"
+            app:cardCornerRadius="30dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.704" />
+            app:layout_constraintVertical_bias="0.60">
+
+            <com.github.mikephil.charting.charts.PieChart
+                android:id="@+id/reportPieChart"
+                android:layout_width="315dp"
+                android:layout_height="315dp"
+                android:layout_marginHorizontal="20sp"
+                android:layout_marginVertical="70sp"
+                android:text="TextView" />
+        </androidx.cardview.widget.CardView>
 
         <TextView
             android:id="@+id/input"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="44dp"
+            android:layout_marginTop="48dp"
+            android:fontFamily="@font/rubik"
             android:text="Please select a date"
-            app:layout_constraintBottom_toTopOf="@+id/reportPieChart"
+            android:textSize="16sp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.498"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.0" />
+            app:layout_constraintTop_toTopOf="parent" />
 
         <Button
             android:id="@+id/button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
             android:text="Select"
-            app:layout_constraintBottom_toTopOf="@+id/reportPieChart"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.498"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/input"
-            app:layout_constraintVertical_bias="0.156" />
+            app:layout_constraintTop_toBottomOf="@+id/input" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 </FrameLayout>

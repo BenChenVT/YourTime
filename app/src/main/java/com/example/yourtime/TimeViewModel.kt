@@ -18,7 +18,7 @@ class TimeViewModel : ViewModel() {
     val allEvents: LiveData<List<Event>> = _allEvents
 
     var image: Bitmap? = null
-    lateinit var imageToken: String
+    var imageToken: String = "-1"
 
     enum class TimerState{
         Stopped, Paused, Running

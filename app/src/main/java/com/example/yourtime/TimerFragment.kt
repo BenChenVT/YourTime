@@ -218,13 +218,20 @@ class TimerFragment : Fragment() {
                     latlong?.let { printAddressForLocation(it) }
                 }
 
-            // add 2 seconds delay
+
+//            view.findNavController().navigate(R.id.action_timerFragment_to_eventFragment, Bundle().apply {
+//                putInt("position", -1)
+//            })
+            //add 2 seconds delay
             Handler().postDelayed({
                 Log.d("Location", "Location: ${vm.coordinates}")
                 Log.d("Address", "Address: ${vm.address}")
                 // navigate to the create event fragment
-                view.findNavController().navigate(R.id.action_timerFragment_to_eventFragment)
-            }, 2000)
+                view.findNavController().navigate(R.id.action_timerFragment_to_eventFragment, Bundle().apply {
+                    putInt("position", -1)
+                })
+
+            }, 1000)
         }
     }
 

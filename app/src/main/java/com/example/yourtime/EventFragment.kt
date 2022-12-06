@@ -25,6 +25,7 @@ import com.google.firebase.auth.ktx.auth
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.ktx.database
 import com.google.firebase.ktx.Firebase
+import com.squareup.picasso.Picasso
 
 
 /**
@@ -37,11 +38,11 @@ class EventFragment : Fragment() {
     private lateinit var viewModel: TimeViewModel
     private lateinit var database: DatabaseReference
 
-    private var note = "-1"
-    private var coordinates = "not done yet"
+    private var note = "What have you done in this period of time"
+    private var coordinates = "-1"
     private var duration = "-1"
-    private var address = "not done yet"
-    private var photo = "not done yet"
+    private var address = "-1"
+    private var photo = "-1"
     private var start = "-1"
     private var title = "-1"
 
@@ -99,10 +100,18 @@ class EventFragment : Fragment() {
         if (position == -1) {
             duration = viewModel.getRawTime().toString()
             start = viewModel.getStart()
+            coordinates = viewModel.coordinates
+            address = viewModel.address
+            photo = viewModel.imageToken
+            if(photo != "-1"){
+                Picasso.get().load(viewModel.imageToken).into(view.findViewById<ImageView>(R.id.takePicture))
+            }
             // todo: get address and location in viewModel
             view.findViewById<TextView>(R.id.TimeText).text = "On ${viewModel.getStart()}\n" +
-                    "You were at [location placeholder]\nYou finish this event with time of ${viewModel.getDuration()}"
-        } else {
+                    "You finish this event with time of ${viewModel.getDuration()}"
+            view.findViewById<TextView>(R.id.LocationText).text = "You did this event at $address"
+        }
+        else{
             viewModel.getAllEvent().observe(viewLifecycleOwner, Observer { eventList ->
                 duration = eventList[position].duration.toString()
                 start = eventList[position].start.toString()
@@ -138,11 +147,10 @@ class EventFragment : Fragment() {
                         }"
                 }
                 view.findViewById<TextView>(R.id.QuickNoteText).text = eventList[position].note
-                view.findViewById<TextView>(R.id.TimeText).text =
-                    "On ${eventList[position].start}\nYou were at${eventList[position].start}\n" +
-                            "You finish this event with time of ${duration}" // this is wrong because duration is raw string
-                view.findViewById<TextView>(R.id.LocationText).text =
-                    "You did this event at ${eventList[position].address}"
+                view.findViewById<TextView>(R.id.TimeText).text = "On ${eventList[position].start}\nYou were at${eventList[position].start}\n" +
+                        "You finish this event with time of ${duration}" // this is wrong because duration is raw string
+                view.findViewById<TextView>(R.id.LocationText).text = "You did this event at ${eventList[position].address}"
+
 
 
             })
@@ -153,61 +161,58 @@ class EventFragment : Fragment() {
         (view.findViewById(R.id.imageButtonBack) as ImageButton).setOnClickListener(object :
             View.OnClickListener {
             override fun onClick(v: View?) {
-                v?.findNavController()?.navigate(R.id.action_eventFragment_to_listFragment)
+
                 // here we will need to upload an event to firebase.
 
                 // if position is -1  add a new data
                 // else update a new data
                 if (position == -1) {
                     var size = viewModel.allEvents.value!!.size
-                    if (size == 0) {
-                        var index = 0
-                        var event =
-                            Event("0", start, duration, note, coordinates, address, title, photo)
+                    coordinates = viewModel.coordinates
+                    address = viewModel.address
+
+                    if(size == 0){
+                        var event = Event("0", start, duration, note, coordinates, address, title, photo)
                         database.child("events").child("0").setValue(event)
-                    } else {
+                    }
+                    else{
                         var index = viewModel.allEvents.value?.get(size - 1)?.index?.toInt()
-                        var event = Event(
-                            (index?.plus(1)).toString(),
-                            start,
-                            duration,
-                            note,
-                            coordinates,
-                            address,
-                            title,
-                            photo
-                        )
+                        var event = Event((index?.plus(1)).toString(), start, duration, note, coordinates, address, title, photo)
                         database.child("events").child((index?.plus(1)).toString()).setValue(event)
                     }
-                } else {
-                    var eventIndex = viewModel.allEvents.value?.get(position)?.index
-                    database.child("events").child(eventIndex.toString()).child("note")
-                        .setValue(note)
-                    database.child("events").child(eventIndex.toString()).child("title")
-                        .setValue(title)
-                    database.child("events").child(eventIndex.toString()).child("photo")
-                        .setValue(photo)
                 }
-
-
+                else{
+                    var eventIndex = viewModel.allEvents.value?.get(position)?.index
+                    database.child("events").child(eventIndex.toString()).child("note").setValue(note)
+                    database.child("events").child(eventIndex.toString()).child("title").setValue(title)
+                    database.child("events").child(eventIndex.toString()).child("photo").setValue(photo)
+                }
+                viewModel.imageToken = "-1"
+                v?.findNavController()?.navigate(R.id.action_eventFragment_to_listFragment)
             }
         })
 
-        (view.findViewById(R.id.deleteButton) as Button).setOnClickListener(object :
-            View.OnClickListener {
+
+        (view.findViewById(R.id.deleteButton) as Button).setOnClickListener(object : View.OnClickListener {
             override fun onClick(v: View?) {
-                var fbIndex = viewModel.allEvents.value?.get(position)?.index
-                if (fbIndex != null) {
-                    viewModel.deleteItem(fbIndex.toInt())
+                if(position == -1){
+                    viewModel.imageToken = "-1"
+                    v?.findNavController()?.navigate(R.id.action_eventFragment_to_timerFragment)
                 }
-                v?.findNavController()?.navigate(R.id.action_eventFragment_to_timerFragment)
+                else {
+                    var fbIndex = viewModel.allEvents.value?.get(position)?.index
+                    if (fbIndex != null) {
+                        viewModel.deleteItem(fbIndex.toInt())
+                    }
+                    viewModel.imageToken = "-1"
+                    v?.findNavController()?.navigate(R.id.action_eventFragment_to_timerFragment)
+                }
             }
         })
 
 
         // when user modified the note, we need to update
-        (view.findViewById(R.id.saveChangeButton) as ImageButton).setOnClickListener(object :
-            View.OnClickListener {
+        (view.findViewById(R.id.saveChangeButton) as ImageButton).setOnClickListener(object : View.OnClickListener {
             override fun onClick(v: View?) {
                 val noteText = view.findViewById<TextView>(R.id.QuickNoteText)
                 noteText.text = view.findViewById<EditText>(R.id.editTextQucikNote).text
@@ -215,15 +220,14 @@ class EventFragment : Fragment() {
             }
         })
 
-        (view.findViewById(R.id.imageButtonTimer) as ImageButton).setOnClickListener(object :
-            View.OnClickListener {
+        (view.findViewById(R.id.imageButtonTimer) as ImageButton).setOnClickListener(object : View.OnClickListener {
             override fun onClick(v: View?) {
+                viewModel.imageToken = "-1"
                 v?.findNavController()?.navigate(R.id.action_eventFragment_to_timerFragment)
             }
         })
 
-        (view.findViewById(R.id.takePicture) as ImageView).setOnClickListener(object :
-            View.OnClickListener {
+        (view.findViewById(R.id.takePicture) as ImageView).setOnClickListener(object : View.OnClickListener {
             override fun onClick(v: View?) {
 
                 // check storage permission
@@ -243,32 +247,26 @@ class EventFragment : Fragment() {
                 if (activity?.packageManager?.let { it1 -> takePictureIntent.resolveActivity(it1) } != null) {
                     startActivityForResult(takePictureIntent, 1)
                 }
+                System.out.println("!!!!!!!!!!you have your position being $position")
                 Handler().postDelayed({
-                    view.findNavController()
-                        .navigate(R.id.action_eventFragment_to_imageFragment, Bundle().apply {
-                            putInt("position", position)
-                        })
-                }, 5000)
-
+                    view.findNavController().navigate(R.id.action_eventFragment_to_imageFragment, Bundle().apply {
+                        putInt("index", position)
+                    })
+                }, 3000)
+                System.out.println("???????????you have your position being $position")
             }
         })
 
 
 
-        spinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+        spinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener{
             override fun onNothingSelected(parent: AdapterView<*>?) {
 
             }
-
-            override fun onItemSelected(
-                parent: AdapterView<*>?,
-                v: View?,
-                position: Int,
-                id: Long
-            ) {
-                val selected = parent?.getItemAtPosition(position).toString()
+            override fun onItemSelected(parent: AdapterView<*>?, v: View?, position: Int, id: Long) {
+                val selected = parent?.getItemAtPosition(position).toString();
                 var imageTitle = view.findViewById<ImageView>(R.id.imageView)
-                when (selected) {
+                when (selected){
                     "game" -> imageTitle.setImageResource(R.drawable.game)
                     "exercise" -> imageTitle.setImageResource(R.drawable.exercise)
                     "movie" -> imageTitle.setImageResource(R.drawable.movie)

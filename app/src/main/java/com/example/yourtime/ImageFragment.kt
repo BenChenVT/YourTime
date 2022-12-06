@@ -29,7 +29,12 @@ class ImageFragment : Fragment() {
 
     private lateinit var viewModel: TimeViewModel
     private val database = Firebase.database.reference
-    private var position by Delegates.notNull<Int>()
+    private var position = -1
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        requireActivity().title = "Take photo"
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -47,16 +52,19 @@ class ImageFragment : Fragment() {
             }
         }
 
-        position = arguments?.getInt("position")?:0
+        System.out.println("--------position here is ${position}") // -1
+        position = arguments?.getInt("index")?:0
+        System.out.println("--------position here is ${position}")  // 0
+        System.out.println("--------position here is ${arguments?.getInt("position")}") // null
 
         view.findViewById<ImageView>(R.id.imageTaken).setImageBitmap(viewModel.image)
 
         uploadImage()
 
         view.findViewById<Button>(R.id.save).setOnClickListener {
-            // todo: 把uri 传回去
-            view?.findNavController()
-                ?.navigate(R.id.action_imageFragment_to_eventFragment, Bundle().apply {
+
+            view.findNavController()
+                .navigate(R.id.action_imageFragment_to_eventFragment, Bundle().apply {
                     putInt("position", position)
                 })
         }
@@ -89,7 +97,7 @@ class ImageFragment : Fragment() {
         imageRef.downloadUrl.addOnSuccessListener { uri ->
             Log.d("ImageFragment", "Image uploaded to firebase")
             viewModel.imageToken = uri.toString()
-            // todo: here we find the uri
+
             Log.d("ImageFragment", "Image token is ${viewModel.imageToken}")
         }.addOnFailureListener {
             // Handle any errors

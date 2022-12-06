@@ -151,7 +151,7 @@ class EventFragment : Fragment() {
                         "You finish this event with time of ${duration}" // this is wrong because duration is raw string
                 view.findViewById<TextView>(R.id.LocationText).text = "You did this event at ${eventList[position].address}"
                 if(photo != "-1"){
-                    Picasso.get().load(viewModel.imageToken).into(view.findViewById<ImageView>(R.id.takePicture))
+                    Picasso.get().load(photo).into(view.findViewById<ImageView>(R.id.takePicture))
                 }
 
 

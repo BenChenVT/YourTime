@@ -16,14 +16,13 @@
             android:id="@+id/PlayStop_Button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginEnd="100dp"
             android:clickable="true"
             app:backgroundTint="#ffa500"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.174"
+            app:layout_constraintBottom_toTopOf="@+id/create_Button"
+            app:layout_constraintEnd_toStartOf="@+id/Finish_Button"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.765"
+            app:layout_constraintTop_toBottomOf="@id/progress_count"
             app:srcCompat="@drawable/ic_play"
             app:tint="#FFFFFF" />
 
@@ -33,11 +32,10 @@
             android:layout_height="wrap_content"
             android:clickable="true"
             app:backgroundTint="#ffa500"
-            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintBottom_toBottomOf="@+id/PlayStop_Button"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.822"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toEndOf="@id/PlayStop_Button"
+            app:layout_constraintTop_toTopOf="@+id/PlayStop_Button"
             app:layout_constraintVertical_bias="0.765"
             app:srcCompat="@drawable/ic_stop"
             app:tint="#FFFFFF" />
@@ -50,8 +48,7 @@
             android:textSize="24sp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintEnd_toStartOf="@id/EventListButton"
-            app:layout_constraintStart_toEndOf="@id/ReportButton"
+            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintVertical_bias="0.035" />
 
@@ -80,12 +77,10 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textSize="70sp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.497"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.423"
+            app:layout_constraintBottom_toBottomOf="@+id/progress_count"
+            app:layout_constraintEnd_toEndOf="@+id/progress_count"
+            app:layout_constraintStart_toStartOf="@+id/progress_count"
+            app:layout_constraintTop_toTopOf="@+id/progress_count"
             tools:text="10:00" />
 
         <me.zhanghai.android.materialprogressbar.MaterialProgressBar
@@ -95,12 +90,10 @@
             android:layout_height="wrap_content"
             android:minWidth="338dp"
             android:minHeight="338dp"
-            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintBottom_toTopOf="@+id/PlayStop_Button"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.493"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.366" />
+            app:layout_constraintTop_toBottomOf="@+id/TimerTitle" />
 
         <Button
             android:id="@+id/create_Button"
@@ -111,8 +104,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.505"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.894" />
+            app:layout_constraintTop_toBottomOf="@id/PlayStop_Button" />
 
 
     </androidx.constraintlayout.widget.ConstraintLayout>

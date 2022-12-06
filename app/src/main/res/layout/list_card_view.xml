@@ -10,15 +10,18 @@
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="wrap_content"
+        android:layout_margin="5sp">
 
         <TextView
             android:id="@+id/durationText"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="28dp"
+            android:layout_marginBottom="1dp"
+            android:fontFamily="@font/rubik"
             android:text="Duration: "
-            android:textSize="16sp"
+            android:textSize="14sp"
             app:layout_constraintBottom_toTopOf="@+id/noteText"
             app:layout_constraintStart_toEndOf="@+id/photo"
             app:layout_constraintTop_toTopOf="parent" />
@@ -35,11 +38,12 @@
 
         <TextView
             android:id="@+id/note"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:fontFamily="@font/rubik_light"
             android:text="TextView"
-            android:textSize="16sp"
-            app:layout_constraintBottom_toBottomOf="@+id/noteText"
+            android:textSize="14sp"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@+id/noteText"
             app:layout_constraintTop_toTopOf="@+id/noteText" />
 
@@ -48,19 +52,22 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="28dp"
+            android:fontFamily="@font/rubik"
             android:text="Note: "
-            android:textSize="16sp"
+            android:textSize="14sp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toEndOf="@+id/photo"
             app:layout_constraintTop_toBottomOf="@id/durationText" />
 
         <TextView
             android:id="@+id/duration"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:fontFamily="@font/rubik_light"
             android:text="TextView"
-            android:textSize="16sp"
+            android:textSize="14sp"
             app:layout_constraintBottom_toBottomOf="@+id/durationText"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@+id/durationText"
             app:layout_constraintTop_toTopOf="@+id/durationText" />
     </androidx.constraintlayout.widget.ConstraintLayout>

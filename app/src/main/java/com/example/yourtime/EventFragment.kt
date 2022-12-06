@@ -148,9 +148,17 @@ class EventFragment : Fragment() {
                 // if position is -1  add a new data
                 // else update a new data
                 if(position == -1){
-                    var index = viewModel.getSize().toString()
-                    var event = Event(index, start, duration, note, coordinates, address, title, photo)
-                    database.child("events").child(index.toString()).setValue(event)
+                    var size = viewModel.allEvents.value!!.size
+                    if(size == 0){
+                        var index = 0
+                        var event = Event("0", start, duration, note, coordinates, address, title, photo)
+                        database.child("events").child("0").setValue(event)
+                    }
+                    else{
+                        var index = viewModel.allEvents.value?.get(size - 1)?.index?.toInt()
+                        var event = Event((index?.plus(1)).toString(), start, duration, note, coordinates, address, title, photo)
+                        database.child("events").child((index?.plus(1)).toString()).setValue(event)
+                    }
                 }
                 else{
                     var eventIndex = viewModel.allEvents.value?.get(position)?.index
@@ -163,6 +171,17 @@ class EventFragment : Fragment() {
 
             }
         })
+
+        (view.findViewById(R.id.deleteButton) as Button).setOnClickListener(object : View.OnClickListener {
+            override fun onClick(v: View?) {
+                var fbIndex = viewModel.allEvents.value?.get(position)?.index
+                if (fbIndex != null) {
+                    viewModel.deleteItem(fbIndex.toInt())
+                }
+                v?.findNavController()?.navigate(R.id.action_eventFragment_to_timerFragment)
+            }
+        })
+
 
         // when user modified the note, we need to update
         (view.findViewById(R.id.saveChangeButton) as ImageButton).setOnClickListener(object : View.OnClickListener {

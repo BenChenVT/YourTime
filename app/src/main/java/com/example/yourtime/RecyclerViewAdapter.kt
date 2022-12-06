@@ -58,8 +58,14 @@ class RecyclerViewAdapter(private var clickListener: OnItemClickListener) :
                 "work" -> {
                     photo.setImageResource(R.drawable.work)
                 }
+                "game" -> {
+                    photo.setImageResource(R.drawable.game)
+                }
                 "exercise" -> {
                     photo.setImageResource(R.drawable.exercise)
+                }
+                "movie" -> {
+                    photo.setImageResource(R.drawable.movie)
                 }
                 "restaurant" -> {
                     photo.setImageResource(R.drawable.restaurant)

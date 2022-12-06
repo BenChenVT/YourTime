@@ -95,6 +95,12 @@ class EventFragment : Fragment() {
         }
         else{
             viewModel.getAllEvent().observe(viewLifecycleOwner, Observer { eventList ->
+                duration = eventList[position].duration.toString()
+                start = eventList[position].start.toString()
+                coordinates = eventList[position].coordinates.toString()
+                address = eventList[position].address.toString()
+                photo = eventList[position].photo.toString()
+                note = eventList[position].note.toString()
                 title = eventList[position].title.toString()
                 when (title){
                     "exercise" -> spinner.setSelection(1)
@@ -142,19 +148,15 @@ class EventFragment : Fragment() {
                 // if position is -1  add a new data
                 // else update a new data
                 if(position == -1){
-                    var index = viewModel.getSize()
-//                    var index = local?.let { viewModel.allEvents.value?.get(it)?.index?.toInt() ?: plus } + 1
-                    database.child("events").child(index.toString()).child("index").setValue(index)
-                    database.child("events").child(index.toString()).child("address").setValue(address)
-                    database.child("events").child(index.toString()).child("coordinates").setValue(coordinates)
-                    database.child("events").child(index.toString()).child("duration").setValue(duration)
-                    database.child("events").child(index.toString()).child("note").setValue(note)
-                    database.child("events").child(index.toString()).child("photo").setValue(photo)
-                    database.child("events").child(index.toString()).child("start").setValue(start)
-                    database.child("events").child(index.toString()).child("title").setValue(title)
+                    var index = viewModel.getSize().toString()
+                    var event = Event(index, start, duration, note, coordinates, address, title, photo)
+                    database.child("events").child(index.toString()).setValue(event)
                 }
                 else{
-                    // todo: change a existing event at position in allevent list
+                    var eventIndex = viewModel.allEvents.value?.get(position)?.index
+                    database.child("events").child(eventIndex.toString()).child("note").setValue(note)
+                    database.child("events").child(eventIndex.toString()).child("title").setValue(title)
+                    database.child("events").child(eventIndex.toString()).child("photo").setValue(photo)
                 }
 
 

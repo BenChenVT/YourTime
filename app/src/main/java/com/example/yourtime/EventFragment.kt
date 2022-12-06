@@ -117,7 +117,12 @@ class EventFragment : Fragment() {
                 start = eventList[position].start.toString()
                 coordinates = eventList[position].coordinates.toString()
                 address = eventList[position].address.toString()
-                photo = eventList[position].photo.toString()
+                if(viewModel.imageToken != "-1"){
+                    photo = viewModel.imageToken
+                }
+                else{
+                    photo = eventList[position].photo.toString()
+                }
                 note = eventList[position].note.toString()
                 title = eventList[position].title.toString()
                 when (title) {

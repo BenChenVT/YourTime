@@ -95,7 +95,7 @@ class EventFragment : Fragment() {
 //        var decription = view.findViewById<EditText>(R.id.editTextQucikNote)
 
         val position = arguments?.getInt("position") ?: 0 // which will be an integer type
-
+        viewModel.position = position
         // when position is -1, meaning we need to create a new even, otherwise, user enter event from list fragment
         if (position == -1) {
             duration = viewModel.getRawTime().toString()
@@ -247,13 +247,11 @@ class EventFragment : Fragment() {
                 if (activity?.packageManager?.let { it1 -> takePictureIntent.resolveActivity(it1) } != null) {
                     startActivityForResult(takePictureIntent, 1)
                 }
-                System.out.println("!!!!!!!!!!you have your position being $position")
                 Handler().postDelayed({
                     view.findNavController().navigate(R.id.action_eventFragment_to_imageFragment, Bundle().apply {
                         putInt("index", position)
                     })
                 }, 3000)
-                System.out.println("???????????you have your position being $position")
             }
         })
 
@@ -286,7 +284,9 @@ class EventFragment : Fragment() {
             viewModel.image = data?.extras?.get("data") as Bitmap
             view?.let {
                 Navigation.findNavController(it)
-                    .navigate(R.id.action_eventFragment_to_imageFragment)
+                    .navigate(R.id.action_eventFragment_to_imageFragment, Bundle().apply {
+                        putInt("index", viewModel.position)
+                    })
             }
         } else {
             super.onActivityResult(requestCode, resultCode, data)

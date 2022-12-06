@@ -20,6 +20,8 @@ class TimeViewModel : ViewModel() {
     var image: Bitmap? = null
     var imageToken: String = "-1"
 
+    var position = 0
+
     enum class TimerState{
         Stopped, Paused, Running
     }

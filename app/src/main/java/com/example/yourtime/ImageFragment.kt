@@ -52,10 +52,7 @@ class ImageFragment : Fragment() {
             }
         }
 
-        System.out.println("--------position here is ${position}") // -1
         position = arguments?.getInt("index")?:0
-        System.out.println("--------position here is ${position}")  // 0
-        System.out.println("--------position here is ${arguments?.getInt("position")}") // null
 
         view.findViewById<ImageView>(R.id.imageTaken).setImageBitmap(viewModel.image)
 

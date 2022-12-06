@@ -1,5 +1,6 @@
 package com.example.yourtime
 
+import android.graphics.Bitmap
 import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -16,8 +17,10 @@ class TimeViewModel : ViewModel() {
     private val _allEvents = MutableLiveData<List<Event>>()
     val allEvents: LiveData<List<Event>> = _allEvents
 
+    var image: Bitmap? = null
+    lateinit var imageToken: String
 
-    enum class TimerState {
+    enum class TimerState{
         Stopped, Paused, Running
     }
     // do everyting to keep tarck of the time

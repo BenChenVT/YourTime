@@ -1,7 +1,12 @@
 package com.example.yourtime
 
 import android.annotation.SuppressLint
+import android.app.Activity
+import android.content.Intent
+import android.graphics.Bitmap
 import android.os.Bundle
+import android.os.Handler
+import android.provider.MediaStore
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -10,6 +15,7 @@ import android.widget.*
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.Navigation
 import androidx.navigation.findNavController
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.database.DatabaseReference
@@ -194,8 +200,26 @@ class EventFragment : Fragment() {
 
         (view.findViewById(R.id.imageButtonTimer) as ImageButton).setOnClickListener(object : View.OnClickListener {
             override fun onClick(v: View?) {
-//                viewModel.deleteItem(1)
                 v?.findNavController()?.navigate(R.id.action_eventFragment_to_timerFragment)
+            }
+        })
+
+        (view.findViewById(R.id.takePicture) as ImageView).setOnClickListener(object : View.OnClickListener {
+            override fun onClick(v: View?) {
+                System.out.println("take image button hit")
+                val takePictureIntent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
+                if (activity?.packageManager?.let { it1 -> takePictureIntent.resolveActivity(it1) } != null) {
+                    startActivityForResult(takePictureIntent, 1)
+                }
+                Handler().postDelayed({
+                    view.findNavController().navigate(R.id.action_eventFragment_to_imageFragment, Bundle().apply {
+                        putInt("position", position)
+                    })
+                }, 5000)
+
+//                view.findNavController().navigate(R.id.action_eventFragment_to_imageFragment, Bundle().apply {
+//                        putInt("position", position)
+//                })
             }
         })
 
@@ -219,6 +243,19 @@ class EventFragment : Fragment() {
                 title = selected
             }
 
+        }
+    }
+
+    @Deprecated("Deprecated in Java")
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        if (requestCode == 1 && resultCode == Activity.RESULT_OK) {
+            viewModel.image = data?.extras?.get("data") as Bitmap
+            view?.let {
+                Navigation.findNavController(it)
+                    .navigate(R.id.action_eventFragment_to_imageFragment)
+            }
+        } else {
+            super.onActivityResult(requestCode, resultCode, data)
         }
     }
 }

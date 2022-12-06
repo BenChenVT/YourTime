@@ -158,7 +158,7 @@
 
 
                 <ImageView
-                    android:id="@+id/imageView2"
+                    android:id="@+id/takePicture"
                     android:layout_width="180dp"
                     android:layout_height="match_parent"
                     android:src="@drawable/ic_baseline_add_a_photo_24" />

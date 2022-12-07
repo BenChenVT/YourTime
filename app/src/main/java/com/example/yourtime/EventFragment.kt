@@ -16,6 +16,7 @@ import android.view.ViewGroup
 import android.widget.*
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
@@ -96,6 +97,10 @@ class EventFragment : Fragment() {
 
         val position = arguments?.getInt("position") ?: 0 // which will be an integer type
         viewModel.position = position
+        if(position + 1 == (viewModel.allEvents.value?.size ?: -2)){
+            view.findViewById<Button>(R.id.deleteButton).isEnabled = false
+            view.findViewById<Button>(R.id.deleteButton).isVisible = false
+        }
         // when position is -1, meaning we need to create a new even, otherwise, user enter event from list fragment
         if (position == -1) {
             duration = viewModel.getRawTime().toString()

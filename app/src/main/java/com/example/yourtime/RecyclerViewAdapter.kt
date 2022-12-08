@@ -53,6 +53,7 @@ class RecyclerViewAdapter(private var clickListener: OnItemClickListener) :
         private val note: TextView = view.findViewById(R.id.note)
         private val duration: TextView = view.findViewById(R.id.duration)
 
+        @SuppressLint("SetTextI18n")
         fun bindItems(item: Event, action: OnItemClickListener) {
             when (item.title) {
                 "work" -> {
@@ -76,7 +77,23 @@ class RecyclerViewAdapter(private var clickListener: OnItemClickListener) :
             }
 
             note.text = item.note
-            duration.text = item.duration
+            var latestDuration = item.duration?.toIntOrNull()
+            var hour = latestDuration?.div(3600)
+            var hours = hour?.times(3600)
+            var min = hours?.let { latestDuration?.minus(it) }?.div(60)
+            var sec = latestDuration?.rem(60)
+            if (hour != null) {
+                duration.text = "${
+                    if (hour.toInt() == 0) ""
+                    else if (hour.toInt() == 1) "1 hour "
+                    else "$hour hours "
+                }${
+                    if (min.toString() == "0") "${sec} seconds"
+                    else if (min.toString().length == 2) "${min} minutes"
+                    else if (min.toString() == "1") "${min} minute"
+                    else "${min} minutes"
+                }"
+            }
 
             itemView.setOnClickListener {
                 action.onItemClick(item, adapterPosition)

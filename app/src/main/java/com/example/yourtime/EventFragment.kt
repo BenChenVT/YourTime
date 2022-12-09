@@ -112,7 +112,6 @@ class EventFragment : Fragment() {
                 Picasso.get().load(viewModel.imageToken)
                     .into(view.findViewById<ImageView>(R.id.takePicture))
             }
-            // todo: get address and location in viewModel
             view.findViewById<TextView>(R.id.TimeText).text = "On ${viewModel.getStart()}\n" +
                     "You finish this event with time of ${viewModel.getDuration()}"
             view.findViewById<TextView>(R.id.LocationText).text = "You did this event at $address"

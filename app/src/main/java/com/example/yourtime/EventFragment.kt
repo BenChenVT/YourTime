@@ -236,7 +236,8 @@ class EventFragment : Fragment() {
             v?.findNavController()?.navigate(R.id.action_eventFragment_to_timerFragment)
         }
 
-        (view.findViewById(R.id.takePicture) as ImageView).setOnClickListener { // check storage permission
+        (view.findViewById(R.id.takePicture) as ImageView).setOnClickListener {
+            // check storage permission
             if (ContextCompat.checkSelfPermission(
                     requireContext(),
                     Manifest.permission.CAMERA
@@ -265,7 +266,6 @@ class EventFragment : Fragment() {
 
         spinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onNothingSelected(parent: AdapterView<*>?) {
-
             }
 
             override fun onItemSelected(

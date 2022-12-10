@@ -104,6 +104,27 @@ class TimerFragment : Fragment() {
     override fun onViewCreated(view: View, bundle: Bundle?) {
         super.onViewCreated(view, bundle)
 
+        if (ActivityCompat.checkSelfPermission(
+                requireActivity(),
+                Manifest.permission.ACCESS_FINE_LOCATION
+            ) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(
+                requireActivity(),
+                Manifest.permission.ACCESS_COARSE_LOCATION
+            ) != PackageManager.PERMISSION_GRANTED
+        ) {
+            // request location access
+            ActivityCompat.requestPermissions(
+                requireActivity(),
+                arrayOf(
+                    Manifest.permission.ACCESS_FINE_LOCATION,
+                    Manifest.permission.ACCESS_COARSE_LOCATION,
+                    Manifest.permission.READ_EXTERNAL_STORAGE,
+                    Manifest.permission.WRITE_EXTERNAL_STORAGE
+                ),
+                1
+            )
+        }
+
 
         // timerButton is the start and stop button
         (view.findViewById(R.id.EventListButton) as Button).setOnClickListener { v ->
@@ -176,32 +197,7 @@ class TimerFragment : Fragment() {
                     }
                 }
             }
-            if (ActivityCompat.checkSelfPermission(
-                    requireActivity(),
-                    Manifest.permission.ACCESS_FINE_LOCATION
-                ) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(
-                    requireActivity(),
-                    Manifest.permission.ACCESS_COARSE_LOCATION
-                ) != PackageManager.PERMISSION_GRANTED
-            ) {
-                // TODO: Consider calling
-                //    ActivityCompat#requestPermissions
-                // here to request the missing permissions, and then overriding
-                //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
-                //                                          int[] grantResults)
-                // to handle the case where the user grants the permission. See the documentation
-                // for ActivityCompat#requestPermissions for more details.
 
-                // request location access
-                ActivityCompat.requestPermissions(
-                    requireActivity(),
-                    arrayOf(
-                        Manifest.permission.ACCESS_FINE_LOCATION,
-                        Manifest.permission.ACCESS_COARSE_LOCATION
-                    ),
-                    1
-                )
-            }
             fusedLocationClient.requestLocationUpdates(
                 locationRequest,
                 locationCallback,
@@ -217,10 +213,6 @@ class TimerFragment : Fragment() {
                     latlong?.let { printAddressForLocation(it) }
                 }
 
-
-//            view.findNavController().navigate(R.id.action_timerFragment_to_eventFragment, Bundle().apply {
-//                putInt("position", -1)
-//            })
             //add 2 seconds delay
             Handler().postDelayed({
                 Log.d("Location", "Location: ${vm.coordinates}")
@@ -230,8 +222,7 @@ class TimerFragment : Fragment() {
                     .navigate(R.id.action_timerFragment_to_eventFragment, Bundle().apply {
                         putInt("position", -1)
                     })
-
-            }, 1000)
+            }, 2000)
         }
     }
 

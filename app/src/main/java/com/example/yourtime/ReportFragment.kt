@@ -22,8 +22,6 @@ import java.util.*
 
 /**
  * A simple [Fragment] subclass.
- * Use the [ReportFragment.newInstance] factory method to
- * create an instance of this fragment.
  */
 class ReportFragment : Fragment() {
 
@@ -44,7 +42,7 @@ class ReportFragment : Fragment() {
         // Inflate the layout for this fragment
         val view = inflater.inflate(R.layout.fragment_report, container, false)
         val model = TimeViewModel()
-        var cal = Calendar.getInstance()
+        val cal = Calendar.getInstance()
         val myFormat = "dd.MM.yyyy"
         val sdf = SimpleDateFormat(myFormat, Locale.US)
         reportPieChart = view.findViewById(R.id.reportPieChart)
@@ -53,7 +51,7 @@ class ReportFragment : Fragment() {
         setupPieChart()
 
         val dateSetListener =
-            DatePickerDialog.OnDateSetListener { view, year, monthOfYear, dayOfMonth ->
+            DatePickerDialog.OnDateSetListener { _, year, monthOfYear, dayOfMonth ->
                 cal.set(Calendar.YEAR, year)
                 cal.set(Calendar.MONTH, monthOfYear)
                 cal.set(Calendar.DAY_OF_MONTH, dayOfMonth)
@@ -77,28 +75,33 @@ class ReportFragment : Fragment() {
     }
 
     private fun calculateTime(events: List<Event>, selectedData: Calendar): FloatArray {
-        var work: Float = 0.0f
-        var exercise: Float = 0.0f
-        var restanrant: Float = 0.0f
-        var other: Float = 0.0f
-        var sum: Float = 0.0f
+        var work = 0.0f
+        var exercise = 0.0f
+        var restaurant = 0.0f
+        var other = 0.0f
+        var sum = 0.0f
 
         val cal = Calendar.getInstance()
         val sdf = SimpleDateFormat("yyyy-MM-dd H:m:s", Locale.ENGLISH)
 
         for (event in events) {
-            cal.time = sdf.parse(event.start)
+            cal.time = event.start?.let { sdf.parse(it) } as Date
             if (cal.get(Calendar.DAY_OF_YEAR) == selectedData.get(Calendar.DAY_OF_YEAR) &&
                 cal.get(Calendar.YEAR) == selectedData.get(Calendar.YEAR)
             ) {
-                if (event.title == "work") {
-                    work += event.duration?.toFloat()!!
-                } else if (event.title == "exercise") {
-                    exercise += event.duration?.toFloat()!!
-                } else if (event.title == "restaurant") {
-                    restanrant += event.duration?.toFloat()!!
-                } else {
-                    other += event.duration?.toFloat()!!
+                when (event.title) {
+                    "work" -> {
+                        work += event.duration?.toFloat()!!
+                    }
+                    "exercise" -> {
+                        exercise += event.duration?.toFloat()!!
+                    }
+                    "restaurant" -> {
+                        restaurant += event.duration?.toFloat()!!
+                    }
+                    else -> {
+                        other += event.duration?.toFloat()!!
+                    }
                 }
                 sum += event.duration?.toFloat()!!
             }
@@ -109,7 +112,7 @@ class ReportFragment : Fragment() {
             reportPieChart.centerText = sdf.format(cal.time) + " No Data"
         }
 
-        return floatArrayOf(work / sum, exercise / sum, restanrant / sum, other / sum)
+        return floatArrayOf(work / sum, exercise / sum, restaurant / sum, other / sum)
     }
 
     private fun setupPieChart() {
@@ -122,7 +125,7 @@ class ReportFragment : Fragment() {
 
     }
 
-    fun loadPieChart(arr: FloatArray) {
+    private fun loadPieChart(arr: FloatArray) {
         val entries = ArrayList<PieEntry>()
 
         if (arr[0] != 0.0f) {

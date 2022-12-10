@@ -17,7 +17,6 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.core.app.ActivityCompat
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.findNavController
 import com.google.android.gms.location.FusedLocationProviderClient
@@ -32,8 +31,6 @@ import java.util.*
 
 /**
  * A simple [Fragment] subclass.
- * Use the [TimerFragment.newInstance] factory method to
- * create an instance of this fragment.
  */
 class TimerFragment : Fragment() {
 
@@ -50,9 +47,6 @@ class TimerFragment : Fragment() {
     private lateinit var fusedLocationClient: FusedLocationProviderClient
     private var addresses: List<Address> = emptyList()
 
-    private var address: String = ""
-    private var coordinates: String = ""
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         requireActivity().title = "YourTime"
@@ -62,10 +56,10 @@ class TimerFragment : Fragment() {
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         // Inflate the layout for this fragment
 
-        vm = ViewModelProvider(requireActivity()).get(TimeViewModel::class.java)
+        vm = ViewModelProvider(requireActivity())[TimeViewModel::class.java]
         val v: View = inflater.inflate(R.layout.fragment_timer, container, false)
         reportButton = v.findViewById(R.id.ReportButton)
         eventListButton = v.findViewById(R.id.EventListButton)
@@ -74,18 +68,18 @@ class TimerFragment : Fragment() {
         timeText = v.findViewById(R.id.TimeText)
 
 
-        var progress_count =
+        val progressCount =
             v.findViewById<me.zhanghai.android.materialprogressbar.MaterialProgressBar>(R.id.progress_count)
-        progress_count.max = 60
+        progressCount.max = 60
 
         //这里liveTime[0]和liveTime[1]是指分钟和秒后期应该加上小时需要在viewModel里面改
 //        val minute: TextView = v.findViewById(R.id.TimeText) as TextView
 //        (v.findViewById(R.id.TimeText) as TextView).text = "hello"
-        vm.getLiveTime().observe(viewLifecycleOwner, Observer { liveTime ->
-            var hour = liveTime[0].toString()
-            var min = liveTime[1].toString()
-            var sec = liveTime[2].toString()
-            (v.findViewById(R.id.TimeText) as TextView).text = "$hour:${
+        vm.getLiveTime().observe(viewLifecycleOwner) { liveTime ->
+            val hour = liveTime[0].toString()
+            val min = liveTime[1].toString()
+            val sec = liveTime[2].toString()
+            timeText.text = "$hour:${
                 if (min.length == 2) min
                 else "0$min"
             }:${
@@ -93,16 +87,16 @@ class TimerFragment : Fragment() {
                 else "0$sec"
             }"
 
-            progress_count.progress = sec.toInt()
+            progressCount.progress = sec.toInt()
 
 
-            System.out.println(
+            println(
                 "$min:${
                     if (sec.length == 2) sec
                     else "0$sec"
                 }"
             )
-        })
+        }
         return v
     }
 
@@ -112,68 +106,56 @@ class TimerFragment : Fragment() {
 
 
         // timerButton is the start and stop button
-        (view.findViewById(R.id.EventListButton) as Button).setOnClickListener(object :
-            View.OnClickListener {
-            override fun onClick(v: View?) {
-                v?.findNavController()?.navigate(R.id.action_timerFragment_to_listFragment)
-            }
-        })
+        (view.findViewById(R.id.EventListButton) as Button).setOnClickListener { v ->
+            v?.findNavController()?.navigate(R.id.action_timerFragment_to_listFragment)
+        }
 
 
-        (view.findViewById(R.id.ReportButton) as Button).setOnClickListener(object :
-            View.OnClickListener {
-            override fun onClick(v: View?) {
-                v?.findNavController()?.navigate(R.id.action_timerFragment_to_reportFragment)
-            }
-        })
+        (view.findViewById(R.id.ReportButton) as Button).setOnClickListener { v ->
+            v?.findNavController()?.navigate(R.id.action_timerFragment_to_reportFragment)
+        }
 
         (view.findViewById(R.id.create_Button) as Button).isEnabled = false
         // go to lap time list fragment
-        (view.findViewById(R.id.PlayStop_Button) as FloatingActionButton).setOnClickListener(object :
-            View.OnClickListener {
-            override fun onClick(v: View?) {
-                vm.hitTimer()
-                // update button text after the state has been changed
-                if (vm.getState() == TimeViewModel.TimerState.Running) {
-                    startPauseButton.setImageResource(R.drawable.ic_pause)
-                }
-                if (vm.getState() == TimeViewModel.TimerState.Stopped ||
-                    vm.getState() == TimeViewModel.TimerState.Paused
-                ) {
-                    startPauseButton.setImageResource(R.drawable.ic_play)
-                }
-                when (vm.getState()) {
-                    TimeViewModel.TimerState.Stopped -> (view.findViewById(R.id.create_Button) as Button).isEnabled =
-                        false
-                    TimeViewModel.TimerState.Running -> (view.findViewById(R.id.create_Button) as Button).isEnabled =
-                        true
-                    TimeViewModel.TimerState.Paused -> (view.findViewById(R.id.create_Button) as Button).isEnabled =
-                        true
-                }
+        (view.findViewById(R.id.PlayStop_Button) as FloatingActionButton).setOnClickListener {
+            vm.hitTimer()
+            // update button text after the state has been changed
+            if (vm.getState() == TimeViewModel.TimerState.Running) {
+                startPauseButton.setImageResource(R.drawable.ic_pause)
             }
-        })
+            if (vm.getState() == TimeViewModel.TimerState.Stopped ||
+                vm.getState() == TimeViewModel.TimerState.Paused
+            ) {
+                startPauseButton.setImageResource(R.drawable.ic_play)
+            }
+            when (vm.getState()) {
+                TimeViewModel.TimerState.Stopped -> (view.findViewById(R.id.create_Button) as Button).isEnabled =
+                    false
+                TimeViewModel.TimerState.Running -> (view.findViewById(R.id.create_Button) as Button).isEnabled =
+                    true
+                TimeViewModel.TimerState.Paused -> (view.findViewById(R.id.create_Button) as Button).isEnabled =
+                    true
+            }
+        }
 
 
         // take down a lap time
-        (view.findViewById(R.id.Finish_Button) as FloatingActionButton).setOnClickListener(object :
-            View.OnClickListener {
-            override fun onClick(v: View?) {
-                val success: Boolean = vm.resetTimer()
-                if (!success) {
-                    Toast.makeText(requireActivity(), "test", Toast.LENGTH_SHORT)
-                        .show()
-                }
-                startPauseButton.setImageResource(R.drawable.ic_play)
-                when (vm.getState()) {
-                    TimeViewModel.TimerState.Stopped -> (view.findViewById(R.id.create_Button) as Button).isEnabled =
-                        false
-                    TimeViewModel.TimerState.Running -> (view.findViewById(R.id.create_Button) as Button).isEnabled =
-                        true
-                    TimeViewModel.TimerState.Paused -> (view.findViewById(R.id.create_Button) as Button).isEnabled =
-                        true
-                }
+        (view.findViewById(R.id.Finish_Button) as FloatingActionButton).setOnClickListener {
+            val success: Boolean = vm.resetTimer()
+            if (!success) {
+                Toast.makeText(requireActivity(), "test", Toast.LENGTH_SHORT)
+                    .show()
             }
-        })
+            startPauseButton.setImageResource(R.drawable.ic_play)
+            when (vm.getState()) {
+                TimeViewModel.TimerState.Stopped -> (view.findViewById(R.id.create_Button) as Button).isEnabled =
+                    false
+                TimeViewModel.TimerState.Running -> (view.findViewById(R.id.create_Button) as Button).isEnabled =
+                    true
+                TimeViewModel.TimerState.Paused -> (view.findViewById(R.id.create_Button) as Button).isEnabled =
+                    true
+            }
+        }
 
 
         (view.findViewById(R.id.create_Button) as Button).setOnClickListener {

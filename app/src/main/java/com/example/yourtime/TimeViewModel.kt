@@ -1,7 +1,6 @@
 package com.example.yourtime
 
 import android.graphics.Bitmap
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -25,7 +24,7 @@ class TimeViewModel : ViewModel() {
     enum class TimerState {
         Stopped, Paused, Running
     }
-    // do everyting to keep tarck of the time
+    // do everything to keep track of the time
     // every logic thing about time
     // 1. start/stop
     // 2. store/delete time
@@ -35,7 +34,7 @@ class TimeViewModel : ViewModel() {
     private val liveTime = MutableLiveData<LongArray>()
     private lateinit var timer: Timer
     private var timerLengthSeconds = 0L
-    var latestDuration = 0L
+    private var latestDuration = 0L
     private var timerState = TimerState.Stopped
     private lateinit var startTime: String
 
@@ -47,20 +46,6 @@ class TimeViewModel : ViewModel() {
 
 
     // all function about time logic
-    /**
-     * function that make the timer ticking
-     */
-    inline fun Timer.scheduleAtFixedRate(
-        delay: Long,
-        period: Long,
-        crossinline action: TimerTask.() -> Unit
-    ) {
-        Timer().schedule(object : TimerTask() {
-            override fun run() {
-                Log.e("NIlu_TAG", "Hello World")
-            }
-        }, 3000)
-    }
 
     // function for start the timer
     /**
@@ -151,18 +136,18 @@ class TimeViewModel : ViewModel() {
      * event just been recorded
      */
     fun getDuration(): String {
-        var hour = latestDuration / 3600
-        var min = (latestDuration - hour * 3600) / 60
-        var sec = latestDuration % 60
+        val hour = latestDuration / 3600
+        val min = (latestDuration - hour * 3600) / 60
+        val sec = latestDuration % 60
         return "${
             if (hour.toInt() == 0) ""
             else if (hour.toInt() == 1) "1 hour "
             else "$hour hours "
         }${
-            if (min.toString() == "0") "${sec} seconds"
-            else if (min.toString().length == 2) "${min} minutes"
-            else if (min.toString() == "1") "${min} minute"
-            else "${min} minutes"
+            if (min.toString() == "0") "$sec seconds"
+            else if (min.toString().length == 2) "$min minutes"
+            else if (min.toString() == "1") "$min minute"
+            else "$min minutes"
         }"
     }
 
@@ -181,21 +166,6 @@ class TimeViewModel : ViewModel() {
         return startTime
     }
 
-    /**
-     * get the size of current eventlist
-     */
-    fun getSize(): Int? {
-        return allEvents.value?.size
-    }
-
-
-    /**
-     * this function will get current coordinate and address and
-     * later on event fragment will use it
-     */
-    fun getAddress() {
-
-    }
 
     fun deleteItem(fbIndex: Int) {
         repository.deleteEvent(fbIndex, _allEvents)

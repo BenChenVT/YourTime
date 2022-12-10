@@ -16,7 +16,7 @@ class RecyclerViewAdapter(private var clickListener: OnItemClickListener) :
 
     private val mList = ArrayList<Event>()
     private val mColors = arrayOf("#F6E58D", "#FFBE76", "#FF7979", "#A29BFE")
-    var card: CardView? = null
+    private var card: CardView? = null
 
     override fun onCreateViewHolder(
         parent: ViewGroup,
@@ -77,21 +77,21 @@ class RecyclerViewAdapter(private var clickListener: OnItemClickListener) :
             }
 
             note.text = item.note
-            var latestDuration = item.duration?.toIntOrNull()
-            var hour = latestDuration?.div(3600)
-            var hours = hour?.times(3600)
-            var min = hours?.let { latestDuration?.minus(it) }?.div(60)
-            var sec = latestDuration?.rem(60)
+            val latestDuration = item.duration?.toIntOrNull()
+            val hour = latestDuration?.div(3600)
+            val hours = hour?.times(3600)
+            val min = hours?.let { latestDuration.minus(it) }?.div(60)
+            val sec = latestDuration?.rem(60)
             if (hour != null) {
                 duration.text = "${
                     if (hour.toInt() == 0) ""
                     else if (hour.toInt() == 1) "1 hour "
                     else "$hour hours "
                 }${
-                    if (min.toString() == "0") "${sec} seconds"
-                    else if (min.toString().length == 2) "${min} minutes"
-                    else if (min.toString() == "1") "${min} minute"
-                    else "${min} minutes"
+                    if (min.toString() == "0") "$sec seconds"
+                    else if (min.toString().length == 2) "$min minutes"
+                    else if (min.toString() == "1") "$min minute"
+                    else "$min minutes"
                 }"
             }
 

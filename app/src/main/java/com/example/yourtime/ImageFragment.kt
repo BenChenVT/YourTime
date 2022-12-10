@@ -12,7 +12,6 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.findNavController
 import com.google.firebase.auth.ktx.auth
-import com.google.firebase.database.ktx.database
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.ktx.storage
 import kotlinx.coroutines.delay
@@ -25,7 +24,6 @@ import java.io.ByteArrayOutputStream
 class ImageFragment : Fragment() {
 
     private lateinit var viewModel: TimeViewModel
-    private val database = Firebase.database.reference
     private var position = -1
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -39,7 +37,7 @@ class ImageFragment : Fragment() {
     ): View? {
         // Inflate the layout for this fragment
         val view = inflater.inflate(R.layout.fragment_image, container, false)
-        viewModel = ViewModelProvider(requireActivity()).get(TimeViewModel::class.java)
+        viewModel = ViewModelProvider(requireActivity())[TimeViewModel::class.java]
         // sign in anonymously
         Firebase.auth.signInAnonymously().addOnCompleteListener { task ->
             if (task.isSuccessful) {

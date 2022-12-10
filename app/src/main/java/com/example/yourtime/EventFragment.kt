@@ -18,7 +18,6 @@ import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.Navigation
 import androidx.navigation.findNavController
@@ -31,7 +30,6 @@ import com.squareup.picasso.Picasso
 
 /**
  * A simple [Fragment] subclass.
- * Use the [EventFragment.newInstance] factory method to
  * create an instance of this fragment.
  */
 class EventFragment : Fragment() {
@@ -75,12 +73,12 @@ class EventFragment : Fragment() {
     }
 
 
-    @SuppressLint("SetTextI18n")
+    @SuppressLint("SetTextI18n", "QueryPermissionsNeeded")
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
         database = Firebase.database.reference
-        viewModel = ViewModelProvider(requireActivity()).get(TimeViewModel::class.java)
+        viewModel = ViewModelProvider(requireActivity())[TimeViewModel::class.java]
         spinner = view.findViewById(R.id.spinnerTitle)
         ArrayAdapter.createFromResource(
             requireActivity(),
@@ -93,13 +91,12 @@ class EventFragment : Fragment() {
             spinner.adapter = adapter
         }
 
-//        var decription = view.findViewById<EditText>(R.id.editTextQucikNote)
-
         val position = arguments?.getInt("position") ?: 0 // which will be an integer type
         viewModel.position = position
-        if(position + 1 == (viewModel.allEvents.value?.size ?: -2)){
-            view.findViewById<Button>(R.id.deleteButton).isEnabled = false
-            view.findViewById<Button>(R.id.deleteButton).isVisible = false
+        if (position + 1 == (viewModel.allEvents.value?.size ?: -2)) {
+            val deleteButton = view.findViewById<Button>(R.id.deleteButton)
+            deleteButton.isEnabled = false
+            deleteButton.isVisible = false
         }
         // when position is -1, meaning we need to create a new even, otherwise, user enter event from list fragment
         if (position == -1) {
@@ -116,15 +113,15 @@ class EventFragment : Fragment() {
                     "You finish this event with time of ${viewModel.getDuration()}"
             view.findViewById<TextView>(R.id.LocationText).text = "You did this event at $address"
         } else {
-            viewModel.getAllEvent().observe(viewLifecycleOwner, Observer { eventList ->
+            viewModel.getAllEvent().observe(viewLifecycleOwner) { eventList ->
                 duration = eventList[position].duration.toString()
                 start = eventList[position].start.toString()
                 coordinates = eventList[position].coordinates.toString()
                 address = eventList[position].address.toString()
-                if (viewModel.imageToken != "-1") {
-                    photo = viewModel.imageToken
+                photo = if (viewModel.imageToken != "-1") {
+                    viewModel.imageToken
                 } else {
-                    photo = eventList[position].photo.toString()
+                    eventList[position].photo.toString()
                 }
                 note = eventList[position].note.toString()
                 title = eventList[position].title.toString()
@@ -136,11 +133,11 @@ class EventFragment : Fragment() {
                     "work" -> spinner.setSelection(4)
                     "other" -> spinner.setSelection(0)
                 }
-                var latestDuration = eventList[position].duration?.toIntOrNull()
-                var hour = latestDuration?.div(3600)
-                var hours = hour?.times(3600)
-                var min = hours?.let { latestDuration?.minus(it) }?.div(60)
-                var sec = latestDuration?.rem(60)
+                val latestDuration = eventList[position].duration?.toIntOrNull()
+                val hour = latestDuration?.div(3600)
+                val hours = hour?.times(3600)
+                val min = hours?.let { latestDuration.minus(it) }?.div(60)
+                val sec = latestDuration?.rem(60)
                 if (hour != null) {
                     duration =
                         "${
@@ -148,16 +145,17 @@ class EventFragment : Fragment() {
                             else if (hour.toInt() == 1) "1 hour "
                             else "$hour hours "
                         }${
-                            if (min.toString() == "0") "${sec} seconds"
-                            else if (min.toString().length == 2) "${min} minutes"
-                            else if (min.toString() == "1") "${min} minute"
-                            else "${min} minutes"
+                            if (min.toString() == "0") "$sec seconds"
+                            else if (min.toString().length == 2) "$min minutes"
+                            else if (min.toString() == "1") "$min minute"
+                            else "$min minutes"
                         }"
                 }
-                view.findViewById<TextView>(R.id.QuickNoteText).text = eventList[position].note
+                val noteText = view.findViewById<TextView>(R.id.QuickNoteText)
+                noteText.text = eventList[position].note
                 view.findViewById<TextView>(R.id.TimeText).text =
                     "On ${eventList[position].start}\nYou were at${eventList[position].start}\n" +
-                            "You finish this event with time of ${duration}" // this is wrong because duration is raw string
+                            "You finish this event with time of $duration" // this is wrong because duration is raw string
                 view.findViewById<TextView>(R.id.LocationText).text =
                     "You did this event at ${eventList[position].address}"
                 if (photo != "-1") {
@@ -165,122 +163,103 @@ class EventFragment : Fragment() {
                 }
 
 
-            })
+            }
         }
 
 
         // when this button is clicked, we need to update an event to firebase anyway
-        (view.findViewById(R.id.imageButtonBack) as ImageButton).setOnClickListener(object :
-            View.OnClickListener {
-            override fun onClick(v: View?) {
+        (view.findViewById(R.id.imageButtonBack) as ImageButton).setOnClickListener { v -> // here we will need to upload an event to firebase.
 
-                // here we will need to upload an event to firebase.
+            // if position is -1  add a new data
+            // else update a new data
+            if (position == -1) {
+                val size = viewModel.allEvents.value!!.size
+                coordinates = viewModel.coordinates
+                address = viewModel.address
 
-                // if position is -1  add a new data
-                // else update a new data
-                if (position == -1) {
-                    var size = viewModel.allEvents.value!!.size
-                    coordinates = viewModel.coordinates
-                    address = viewModel.address
-
-                    if (size == 0) {
-                        var event =
-                            Event("0", start, duration, note, coordinates, address, title, photo)
-                        database.child("events").child("0").setValue(event)
-                    } else {
-                        var index = viewModel.allEvents.value?.get(size - 1)?.index?.toInt()
-                        var event = Event(
-                            (index?.plus(1)).toString(),
-                            start,
-                            duration,
-                            note,
-                            coordinates,
-                            address,
-                            title,
-                            photo
-                        )
-                        database.child("events").child((index?.plus(1)).toString()).setValue(event)
-                    }
+                if (size == 0) {
+                    val event =
+                        Event("0", start, duration, note, coordinates, address, title, photo)
+                    database.child("events").child("0").setValue(event)
                 } else {
-                    var eventIndex = viewModel.allEvents.value?.get(position)?.index
-                    database.child("events").child(eventIndex.toString()).child("note")
-                        .setValue(note)
-                    database.child("events").child(eventIndex.toString()).child("title")
-                        .setValue(title)
-                    database.child("events").child(eventIndex.toString()).child("photo")
-                        .setValue(photo)
+                    val index = viewModel.allEvents.value?.get(size - 1)?.index?.toInt()
+                    val event = Event(
+                        (index?.plus(1)).toString(),
+                        start,
+                        duration,
+                        note,
+                        coordinates,
+                        address,
+                        title,
+                        photo
+                    )
+                    database.child("events").child((index?.plus(1)).toString()).setValue(event)
                 }
+            } else {
+                val eventIndex = viewModel.allEvents.value?.get(position)?.index
+                database.child("events").child(eventIndex.toString()).child("note")
+                    .setValue(note)
+                database.child("events").child(eventIndex.toString()).child("title")
+                    .setValue(title)
+                database.child("events").child(eventIndex.toString()).child("photo")
+                    .setValue(photo)
+            }
+            viewModel.imageToken = "-1"
+            v?.findNavController()?.navigate(R.id.action_eventFragment_to_listFragment)
+        }
+
+
+        (view.findViewById(R.id.deleteButton) as Button).setOnClickListener { v ->
+            if (position == -1) {
                 viewModel.imageToken = "-1"
-                v?.findNavController()?.navigate(R.id.action_eventFragment_to_listFragment)
-            }
-        })
-
-
-        (view.findViewById(R.id.deleteButton) as Button).setOnClickListener(object :
-            View.OnClickListener {
-            override fun onClick(v: View?) {
-                if (position == -1) {
-                    viewModel.imageToken = "-1"
-                    v?.findNavController()?.navigate(R.id.action_eventFragment_to_timerFragment)
-                } else {
-                    var fbIndex = viewModel.allEvents.value?.get(position)?.index
-                    if (fbIndex != null) {
-                        viewModel.deleteItem(fbIndex.toInt())
-                    }
-                    viewModel.imageToken = "-1"
-                    v?.findNavController()?.navigate(R.id.action_eventFragment_to_timerFragment)
+                v?.findNavController()?.navigate(R.id.action_eventFragment_to_timerFragment)
+            } else {
+                val fbIndex = viewModel.allEvents.value?.get(position)?.index
+                if (fbIndex != null) {
+                    viewModel.deleteItem(fbIndex.toInt())
                 }
-            }
-        })
-
-
-        // when user modified the note, we need to update
-        (view.findViewById(R.id.saveChangeButton) as ImageButton).setOnClickListener(object :
-            View.OnClickListener {
-            override fun onClick(v: View?) {
-                val noteText = view.findViewById<TextView>(R.id.QuickNoteText)
-                noteText.text = view.findViewById<EditText>(R.id.editTextQucikNote).text
-                note = noteText.text.toString()
-            }
-        })
-
-        (view.findViewById(R.id.imageButtonTimer) as ImageButton).setOnClickListener(object :
-            View.OnClickListener {
-            override fun onClick(v: View?) {
                 viewModel.imageToken = "-1"
                 v?.findNavController()?.navigate(R.id.action_eventFragment_to_timerFragment)
             }
-        })
+        }
 
-        (view.findViewById(R.id.takePicture) as ImageView).setOnClickListener(object :
-            View.OnClickListener {
-            override fun onClick(v: View?) {
 
-                // check storage permission
-                if (ContextCompat.checkSelfPermission(
-                        requireContext(),
-                        Manifest.permission.CAMERA
-                    ) != PackageManager.PERMISSION_GRANTED
-                ) {
-                    ActivityCompat.requestPermissions(
-                        requireActivity(),
-                        arrayOf(Manifest.permission.CAMERA),
-                        100
-                    )
-                }
-                System.out.println("take image button hit")
-                val takePictureIntent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
-                if (activity?.packageManager?.let { it1 -> takePictureIntent.resolveActivity(it1) } != null) {
-                    startActivityForResult(takePictureIntent, 1)
-                }
-                Handler().postDelayed({
-                    view.findNavController()
-                        .navigate(R.id.action_eventFragment_to_imageFragment, Bundle().apply {
-                            putInt("index", position)
-                        })
-                }, 3000)
+        // when user modified the note, we need to update
+        (view.findViewById(R.id.saveChangeButton) as ImageButton).setOnClickListener {
+            val noteText = view.findViewById<TextView>(R.id.QuickNoteText)
+            noteText.text = view.findViewById<EditText>(R.id.editTextQucikNote).text
+            note = noteText.text.toString()
+        }
+
+        (view.findViewById(R.id.imageButtonTimer) as ImageButton).setOnClickListener { v ->
+            viewModel.imageToken = "-1"
+            v?.findNavController()?.navigate(R.id.action_eventFragment_to_timerFragment)
+        }
+
+        (view.findViewById(R.id.takePicture) as ImageView).setOnClickListener { // check storage permission
+            if (ContextCompat.checkSelfPermission(
+                    requireContext(),
+                    Manifest.permission.CAMERA
+                ) != PackageManager.PERMISSION_GRANTED
+            ) {
+                ActivityCompat.requestPermissions(
+                    requireActivity(),
+                    arrayOf(Manifest.permission.CAMERA),
+                    100
+                )
             }
-        })
+
+            val takePictureIntent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
+            if (activity?.packageManager?.let { it1 -> takePictureIntent.resolveActivity(it1) } != null) {
+                startActivityForResult(takePictureIntent, 1)
+            }
+            Handler().postDelayed({
+                view.findNavController()
+                    .navigate(R.id.action_eventFragment_to_imageFragment, Bundle().apply {
+                        putInt("index", position)
+                    })
+            }, 3000)
+        }
 
 
 
@@ -296,7 +275,7 @@ class EventFragment : Fragment() {
                 id: Long
             ) {
                 val selected = parent?.getItemAtPosition(position).toString()
-                var imageTitle = view.findViewById<ImageView>(R.id.imageView)
+                val imageTitle = view.findViewById<ImageView>(R.id.imageView)
                 when (selected) {
                     "game" -> imageTitle.setImageResource(R.drawable.game)
                     "exercise" -> imageTitle.setImageResource(R.drawable.exercise)
